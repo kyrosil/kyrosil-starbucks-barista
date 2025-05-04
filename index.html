@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyrosil Starbucks Barista</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Sayfanın kenar boşluklarını sıfırlayalım ve canvas ortalansın */
+        /* Bu stilleri istersen style.css dosyasına da taşıyabilirsin */
+        body { 
+            margin: 0; 
+            overflow: hidden; /* Kaydırma çubuklarını gizle */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; /* Sayfa yüksekliği kadar */
+            background-color: #f0f0f0; /* Arka plan rengi (Canvas dışı) */
+        }
+        canvas { 
+            border: 1px solid black; /* Sadece görmek için geçici kenarlık */
+            display: block; /* Ekstra boşlukları engelle */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
 
+    <script src="script.js"></script>
+</body>
+</html>
