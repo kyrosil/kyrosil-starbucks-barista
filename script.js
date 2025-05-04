@@ -34,13 +34,13 @@ logoImage.onload = function() {
 bgImage.src = 'original.gif';
 logoImage.src = 'Starbucks_Corporation.png';
 
-// Logo boyutu (İstersen değiştirebiliriz)
+// Logo boyutu
 const logoWidth = 80;
 const logoHeight = 80;
 
-// Logo yerleşimi: Canvas'ın tam ortası
-const logoX = canvas.width / 2 - logoWidth / 2; // Ortalamak için hesaplama
-const logoY = canvas.height / 2 - logoHeight / 2; // Ortalamak için hesaplama
+// Logo yerleşimi: Üstte Ortala
+const logoX = canvas.width / 2 - logoWidth / 2; // Yatayda ortala
+const logoY = 30; // Üstten sabit boşluk (Dikeyde ortalama KALDIRILDI)
 
 
 // Ana oyun döngüsü fonksiyonu
@@ -57,11 +57,10 @@ function drawGame() {
     if (logoLoaded) {
         const circleCenterX = logoX + logoWidth / 2; // Dairenin merkez X'i
         const circleCenterY = logoY + logoHeight / 2; // Dairenin merkez Y'si
-        const radius = logoWidth / 2; // Yarıçap (logonun yarısı kadar)
+        const radius = logoWidth / 2; // Yarıçap
 
         ctx.fillStyle = 'white'; // Dairenin rengi beyaz
         ctx.beginPath(); // Yeni bir çizim yolu başlat
-        // Daire çiz: merkezX, merkezY, yarıçap, başlangıç açısı, bitiş açısı
         ctx.arc(circleCenterX, circleCenterY, radius, 0, Math.PI * 2);
         ctx.fill(); // Dairenin içini doldur
 
