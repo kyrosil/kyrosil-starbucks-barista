@@ -4,7 +4,7 @@ let startScreenDiv, gameTitleEl, gameSloganEl, langTRButton, langENButton, regio
 let messageOverlay, messageTitle, messageBody, closeButton;
 const bgImage = new Image(); const logoImage = new Image();
 let bgLoaded = false, logoLoaded = false;
-let assetsReady = false; // Görsellerin yüklendiğini belirten bayrak
+// assetsReady flag'i KULLANILMAYACAK (Kullanıcının kodunda yoktu)
 let gameState = 'LOADING';
 let tutorialStep = 0; let isTutorialComplete = false;
 let currentLevelIndex = 0; let currentRecipeStep = 0; let canPlay = true;
@@ -15,7 +15,7 @@ let feedbackMessage = { text: '', color: 'red', expiryTime: 0 };
 const logoWidth = 80; const logoHeight = 80; let logoX = 0; const logoY = 20;
 
 // --- Sabit Veriler ---
-const texts = { TR:{gameTitle:"Kyrosil Starbucks Barista",slogan:"En İyi Barista Ol! Siparişleri doğru sırayla hazırla, ödülleri kap!",regionLabel:"Bölge:",rewardTitle:"Seviye Ödülleri",startButton:"Oyuna Başla!",loadingText:"Yükleniyor...",level:"Seviye",order:"Sipariş",requirements:"Gerekenler",attemptsLeft:"Kalan Hata Hakkı",errorTitle:"Hata!",errorMessage:"Yanlış malzeme veya sıra! Baştan başla.",winTitle:"Tebrikler!",winMessagePart1:"Seviye ",winMessagePart2_App:" **{REWARD}** değerinde Starbucks Mobil Uygulaması ödülü kazandın!",winMessagePart2_USDT:" **NAKİT ÖDÜL (500 USDT)** kazandın!",winMessageEmailPrompt:"Ödülünü almak için aşağıdaki linke tıklayarak veya manuel olarak",winMessageEmailAddress:"giveaways@kyrosil.eu",winMessageEmailSubjectBase:"Kyrosil Starbucks Oyun Ödülü - Seviye ",winMessageEmailBodyBase_App:"Merhaba,\n\nSeviye {LEVEL} Starbucks Mobil Uygulaması ödülünü ({REWARD}) kazandım.\nUygulama kodumu bekliyorum.\n\nEkran görüntüm ektedir.\n\nTeşekkürler.",winMessageEmailBodyBase_USDT:"Merhaba,\n\nSeviye 10 Büyük Ödülünü (500 USDT) kazandım.\nÖdül gönderimi için detayları bekliyorum.\n\nEkran görüntüm ektedir.\n\nTeşekkürler.",winMessageEmailInstructions:"adresine bu ekranın görüntüsüyle birlikte mail atabilirsin.",gameOverTitle:"Oyun Bitti!",gameOverMessage:"Tüm seviyeleri tamamladın! Harikasın!",noAttemptsTitle:"Hakların Bitti!",noAttemptsMessage:"Bugünkü 3 hata yapma hakkını doldurdun. Yarın tekrar oynamak için geri gel!",closeButton:"Tamam",tutorialIntro:"Oyuna Hoş Geldin! İşte Tıklama Alanları:",tutorialItemIntro:"Bu: ",tutorialItemAction_Default:". Tarifte adı geçince buraya tıklayacaksın.",tutorialItemAction_Cat:". Önemli bir mola!",tutorialItemAction_Register:". Siparişi bitirmek için.",tutorialItemAction_OrderSlip:". Siparişi almak için.",tutorialItemAction_PriceList:". Fiyatları görmek için.",tutorialItemAction_Fridge:". Soğuk malzemeler burada.",tutorialItemAction_Dessert:". Tatlılar burada.",tutorialItemPrompt:"Devam etmek için vurgulanan alana tıkla.",tutorialComplete:"Harika! Başlıyoruz!",tutorialOutOfAttempts:"Hakların bittiği için bugünlük bu kadar!",mixedOrderWarning:"Not: Malzemeler karışık, doğru sırada hazırla!",priceCheckWarning:"Müşteri fiyatı da sordu!",gsmLabel:"Starbucks Mobile Kayıtlı GSM No:",gsmPlaceholder:"Numaranızı Girin",kvkkLabel:" KVKK kapsamında numaramın sadece ödül aktarımı için göstermelik olarak istendiğini anladım, onaylıyorum.",gsmError:"Lütfen numara girip kutuyu işaretleyin.",rewardTypeApp:"(Starbucks App Kodu)",rewardTypeCash:"(NAKİT ÖDÜL!)"},EN:{gameTitle:"Kyrosil Starbucks Barista",slogan:"Be the Best Barista! Prepare orders correctly and grab rewards!",regionLabel:"Region:",rewardTitle:"Level Rewards",startButton:"Start Game!",loadingText:"Loading...",level:"Level",order:"Order",requirements:"Required",attemptsLeft:"Attempts Left",errorTitle:"Error!",errorMessage:"Wrong item or sequence! Start over.",winTitle:"Congratulations!",winMessagePart1:"You won the Level ",winMessagePart2_App:" Starbucks Mobile App reward ({REWARD})!",winMessagePart2_USDT:" CASH PRIZE (500 USDT)!",winMessageEmailPrompt:"To claim your reward, click the link below or manually email",winMessageEmailAddress:"giveaways@kyrosil.eu",winMessageEmailSubjectBase:"Kyrosil Starbucks Game Reward - Level ",winMessageEmailBodyBase_App:"Hello,\n\nI won the Level {LEVEL} Starbucks Mobile App reward ({REWARD}).\nI'm waiting for my app code.\nMy screenshot is attached.\n\nThanks.",winMessageEmailBodyBase_USDT:"Hello,\n\nI won the Level 10 Grand Prize (500 USDT).\nI await details for the prize transfer.\nMy screenshot is attached.\n\nThanks.",winMessageEmailInstructions:"with a screenshot.",gameOverTitle:"Game Over!",gameOverMessage:"You completed all levels! Awesome!",noAttemptsTitle:"No Attempts Left!",noAttemptsMessage:"You've used your 3 attempts for today. Come back tomorrow!",closeButton:"OK",tutorialIntro:"Welcome! Let's show you the interaction areas:",tutorialItemIntro:"This is the: ",tutorialItemAction_Default:". Click here when it's in the recipe.",tutorialItemAction_Cat:". An important break!",tutorialItemAction_Register:". To finish the order.",tutorialItemAction_OrderSlip:". To get the order.",tutorialItemAction_PriceList:". To check prices.",tutorialItemAction_Fridge:". Cold items are here.",tutorialItemAction_Dessert:". Desserts are here.",tutorialItemPrompt:"Click the highlighted area to continue.",tutorialComplete:"Great! Let's begin!",tutorialOutOfAttempts:"You are out of attempts for today!",mixedOrderWarning:"Note: Ingredients listed randomly, prepare in correct order!",priceCheckWarning:"Customer asked for the price!",gsmLabel:"Starbucks Mobile Registered GSM No:",gsmPlaceholder:"Enter your phone number",kvkkLabel:" I agree my number is requested symbolically for reward transfer under GDPR & Privacy Policy (Applies to USA users selecting Europe too).",gsmError:"Please enter a number and check the box.",rewardTypeApp:"(Starbucks App Code)",rewardTypeCash:"(CASH PRIZE!)"} };
+const texts = { TR:{gameTitle:"Kyrosil Starbucks Barista",slogan:"En İyi Barista Ol! Siparişleri doğru sırayla hazırla, ödülleri kap!",regionLabel:"Bölge:",rewardTitle:"Seviye Ödülleri",startButton:"Oyuna Başla!",loadingText:"Yükleniyor...",level:"Seviye",order:"Sipariş",requirements:"Gerekenler",attemptsLeft:"Kalan Hata Hakkı",errorTitle:"Hata!",errorMessage:"Yanlış malzeme veya sıra! Baştan başla.",winTitle:"Tebrikler!",winMessagePart1:"Seviye ",winMessagePart2_App:" **{REWARD}** değerinde Starbucks Mobil Uygulaması ödülü kazandın!",winMessagePart2_USDT:" **NAKİT ÖDÜL (500 USDT)** kazandın!",winMessageEmailPrompt:"Ödülünü almak için aşağıdaki linke tıklayarak veya manuel olarak",winMessageEmailAddress:"giveaways@kyrosil.eu",winMessageEmailSubjectBase:"Kyrosil Starbucks Oyun Ödülü - Seviye ",winMessageEmailBodyBase_App:"Merhaba,\n\nSeviye {LEVEL} Starbucks Mobil Uygulaması ödülünü ({REWARD}) kazandım.\nUygulama kodumu bekliyorum.\n\nEkran görüntüm ektedir.\n\nTeşekkürler.",winMessageEmailBodyBase_USDT:"Merhaba,\n\nSeviye 10 Büyük Ödülünü (500 USDT) kazandım.\nÖdül gönderimi için detayları bekliyorum.\n\nEkran görüntüm ektedir.\n\nTeşekkürler.",winMessageEmailInstructions:"adresine bu ekranın görüntüsüyle birlikte mail atabilirsin.",gameOverTitle:"Oyun Bitti!",gameOverMessage:"Tüm seviyeleri tamamladın! Harikasın!",noAttemptsTitle:"Hakların Bitti!",noAttemptsMessage:"Bugünkü 3 hata yapma hakkını doldurdun. Yarın tekrar oynamak için geri gel!",closeButton:"Tamam",tutorialIntro:"Oyuna Hoş Geldin! İşte Tıklama Alanları:",tutorialItemIntro:"Bu: ",tutorialItemAction_Default:". Tarifte adı geçince buraya tıklayacaksın.",tutorialItemAction_Cat:". Önemli bir mola!",tutorialItemAction_Register:". Siparişi bitirmek için.",tutorialItemAction_OrderSlip:". Siparişi almak için.",tutorialItemAction_PriceList:". Fiyatları görmek için.",tutorialItemAction_Fridge:". Soğuk malzemeler burada.",tutorialItemAction_Dessert:". Tatlılar burada.",tutorialItemPrompt:"Devam etmek için vurgulanan alana tıkla.",tutorialComplete:"Harika! Başlıyoruz!",tutorialOutOfAttempts:"Hakların bittiği için bugünlük bu kadar!",mixedOrderWarning:"Not: Malzemeler karışık, doğru sırada hazırla!",priceCheckWarning:"Müşteri fiyatı da sordu!",gsmLabel:"Starbucks Mobile Kayıtlı GSM No:",gsmPlaceholder:"Numaranızı Girin",kvkkLabel:" KVKK kapsamında numaramın sadece ödül aktarımı için göstermelik olarak istendiğini anladım, onaylıyorum.",gsmError:"Lütfen numara girip kutuyu işaretleyin.",rewardTypeApp:"(Starbucks App Kodu)",rewardTypeCash:"(NAKİT ÖDÜL!)"},EN:{gameTitle:"Kyrosil Starbucks Barista",slogan:"Be the Best Barista! Prepare orders correctly and grab rewards!",regionLabel:"Region:",rewardTitle:"Level Rewards",startButton:"Start Game!",loadingText:"Loading...",level:"Level",order:"Order",requirements:"Required",attemptsLeft:"Attempts Left",errorTitle:"Error!",errorMessage:"Wrong item or sequence! Start over.",winTitle:"Congratulations!",winMessagePart1:"You won the Level ",winMessagePart2_App:" Starbucks Mobile App reward ({REWARD})!",winMessagePart2_USDT:" CASH PRIZE (500 USDT)!",winMessageEmailPrompt:"To claim your reward, click the link below or manually email",winMessageEmailAddress:"giveaways@kyrosil.eu",winMessageEmailSubjectBase:"Kyrosil Starbucks Game Reward - Level ",winMessageEmailBodyBase_App:"Hello,\n\nI won the Level {LEVEL} Starbucks Mobile App reward ({REWARD})...",winMessageEmailBodyBase_USDT:"Hello,\n\nI won the Level 10 Grand Prize (500 USDT)...",winMessageEmailInstructions:"with a screenshot.",gameOverTitle:"Game Over!",gameOverMessage:"You completed all levels! Awesome!",noAttemptsTitle:"No Attempts Left!",noAttemptsMessage:"You've used your 3 attempts for today. Come back tomorrow!",closeButton:"OK",tutorialIntro:"Welcome! Let's show you the interaction areas:",tutorialItemIntro:"This is the: ",tutorialItemAction_Default:". Click here when it's in the recipe.",tutorialItemAction_Cat:". An important break!",tutorialItemAction_Register:". To finish the order.",tutorialItemAction_OrderSlip:". To get the order.",tutorialItemAction_PriceList:". To check prices.",tutorialItemAction_Fridge:". Cold items are here.",tutorialItemAction_Dessert:". Desserts are here.",tutorialItemPrompt:"Click the highlighted area to continue.",tutorialComplete:"Great! Let's begin!",tutorialOutOfAttempts:"You are out of attempts for today!",mixedOrderWarning:"Note: Ingredients listed randomly, prepare in correct order!",priceCheckWarning:"Customer asked for the price!",gsmLabel:"Starbucks Mobile Registered GSM No:",gsmPlaceholder:"Enter your phone number",kvkkLabel:" I agree my number is requested symbolically for reward transfer under GDPR & Privacy Policy (Applies to USA users selecting Europe too).",gsmError:"Please enter a number and check the box.",rewardTypeApp:"(Starbucks App Code)",rewardTypeCash:"(CASH PRIZE!)"} };
 const rewardTiers = {TR:{2:"200 TL",4:"600 TL",6:"2.000 TL",8:"5.000 TL",10:"500 USDT"},EU:{2:"5 USD",4:"15 USD",6:"40 USD",8:"100 USD",10:"500 USDT"}};
 const clickableItems = [{name:'Espresso Makinesi',x:605,y:300,width:50,height:60},{name:'Yeşil Şişe',x:300,y:245,width:30,height:55},{name:'Şurup Pompası',x:340,y:245,width:30,height:55},{name:'Süt Kutusu',x:390,y:245,width:30,height:55},{name:'Bardak Alanı',x:330,y:357,width:50,height:50},{name:'Tezgahtaki Kedi',x:442,y:352,width:70,height:40},{name:'Kasa',x:700,y:300,width:60,height:60},{name:'Sipariş Fişi',x:780,y:240,width:15,height:30},{name:'Buzdolabı',x:445,y:305,width:70,height:40},{name:'Tatlı Dolabı',x:700,y:450,width:80,height:60},{name:'Fiyat Listesi',x:500,y:80,width:100,height:200}];
 const levels = [{level:1,recipeName:"İlk Sipariş (Espresso)",clicks:['Sipariş Fişi','Espresso Makinesi']},{level:2,recipeName:"Caffè Latte (Fiyatlı)",clicks:['Espresso Makinesi','Süt Kutusu','Fiyat Listesi']},{level:3,recipeName:"Vanilya Şur. Soğuk Kahve",clicks:['Bardak Alanı','Buzdolabı','Espresso Makinesi','Şurup Pompası']},{level:4,recipeName:"Kedi Molası & Yeşil Çay",clicks:['Tezgahtaki Kedi','Yeşil Şişe','Bardak Alanı']},{level:5,recipeName:"Yoğun Talep",clicks:['Sipariş Fişi','Espresso Makinesi','Süt Kutusu','Espresso Makinesi']},{level:6,recipeName:"Hesaplı Şuruplu Latte",clicks:['Bardak Alanı','Espresso Makinesi','Şurup Pompası','Süt Kutusu','Fiyat Listesi','Kasa']},{level:7,recipeName:"Yeşil & Vanilya & Buz",clicks:['Yeşil Şişe','Şurup Pompası','Buzdolabı','Bardak Alanı']},{level:8,recipeName:"Tam Menü (Basit)",clicks:['Sipariş Fişi','Bardak Alanı','Espresso Makinesi','Süt Kutusu','Tatlı Dolabı','Kasa']},{level:9,recipeName:"Pati Deluxe Özel",clicks:['Bardak Alanı','Buzdolabı','Yeşil Şişe','Şurup Pompası','Espresso Makinesi','Tezgahtaki Kedi','Kasa']},{level:10,recipeName:"USTALIK ESERİ!",clicks:['Sipariş Fişi','Fiyat Listesi','Bardak Alanı','Buzdolabı','Yeşil Şişe','Şurup Pompası','Espresso Makinesi','Süt Kutusu','Tatlı Dolabı','Tezgahtaki Kedi','Kasa']},{level:11,recipeName:"OYUN BİTTİ!",clicks:[]}];
@@ -24,8 +24,8 @@ const levels = [{level:1,recipeName:"İlk Sipariş (Espresso)",clicks:['Sipariş
 function loadGameData(){try{const today=new Date().toISOString().split('T')[0];lastPlayDate=localStorage.getItem('barista_lastPlayDate')||today;failedAttemptsToday=parseInt(localStorage.getItem('barista_failedAttempts')||'0',10);if(lastPlayDate!==today){console.log("Yeni gün!");failedAttemptsToday=0;lastPlayDate=today;saveGameData();} if(failedAttemptsToday>=3){canPlay=false;console.warn("Hak bitti (loadGameData).");}else{canPlay=true;} console.log(`BG Hata Hakkı: ${3-failedAttemptsToday}/3`);}catch(e){console.error("loadGameData Hatası:",e);canPlay=true;}}
 function saveGameData(){try{localStorage.setItem('barista_lastPlayDate',lastPlayDate);localStorage.setItem('barista_failedAttempts',failedAttemptsToday.toString());}catch(e){console.error("saveGameData Hatası:",e);}}
 function getRewardForLevel(level, region) { return rewardTiers[region]?.[level] || null; }
-function showMessage(title, bodyHtml, type='info'){ try{ console.log(`showMessage Çağrıldı: Tip=${type}, Başlık=${title}`); if(!messageOverlay||!messageTitle||!messageBody) {console.error("Mesaj elementleri bulunamadı!"); return;} messageTitle.innerText=title; messageBody.innerHTML=bodyHtml; messageOverlay.className=`overlay message-${type}`; messageOverlay.style.display='flex'; console.log("Mesaj gösterildi, canPlay=false yapılıyor."); canPlay=false; } catch(e) { console.error("showMessage Hatası:", e); }}
-function hideMessage(){ try{ if(!messageOverlay) {console.error("Mesaj overlay elementi bulunamadı!"); return;} messageOverlay.style.display='none'; if(failedAttemptsToday<3 && currentLevelIndex<levels.length-1 && gameState==='PLAYING'){canPlay=true; console.log("Mesaj kapatıldı, canPlay=true.");} else { console.log("Mesaj kapatıldı, canPlay false."); canPlay = false; } } catch(e) { console.error("hideMessage Hatası:", e); }}
+function showMessage(title, bodyHtml, type='info'){ try{ console.log(`showMessage: Tip=${type}, Başlık=${title}`); if(!messageOverlay||!messageTitle||!messageBody)throw new Error("Mesaj elementleri bulunamadı!"); messageTitle.innerText=title; messageBody.innerHTML=bodyHtml; messageOverlay.className=`overlay message-${type}`; messageOverlay.style.display='flex'; canPlay=false; } catch(e) { console.error("showMessage Hatası:", e); }}
+function hideMessage(){ try{ if(!messageOverlay) throw new Error("Mesaj overlay elementi bulunamadı!"); messageOverlay.style.display='none'; if(failedAttemptsToday<3 && currentLevelIndex<levels.length-1 && gameState==='PLAYING'){canPlay=true; console.log("Mesaj kapatıldı, canPlay=true.");} else { console.log("Mesaj kapatıldı, canPlay false."); canPlay = false; } } catch(e) { console.error("hideMessage Hatası:", e); }}
 function shuffleArray(array){ if (!array || array.length === 0) return []; let ci=array.length,ri;const na=array.slice();while(ci!==0){ri=Math.floor(Math.random()*ci);ci--;[na[ci],na[ri]]=[na[ri],na[ci]];} return na; }
 
 function updateTexts(lang, region) {
@@ -49,104 +49,57 @@ function updateTexts(lang, region) {
 }
 
 function checkStartButtonState() {
-    try {
-        const numberEntered = gsmInput?.value.trim().length > 0;
-        const kvkkValid = kvkkCheck?.checked;
-        // Butonun aktifleşmesi için görsellerin de yüklenmiş olması LAZIM
-        const canEnable = numberEntered && kvkkValid && assetsReady; // assetsReady kontrolü DÜZELTİLDİ
-        console.log(`checkStartButtonState: num=${numberEntered}, kvkk=${kvkkValid}, assetsReady=${assetsReady} => canEnable=${canEnable}`);
-
-        if (startButton) {
-            if (canEnable) {
-                startButton.disabled = false;
-                startButton.innerText = texts[currentLang]?.startButton || "Start Game!"; // Yükleniyor yazısını kaldır
-                if(gsmError) gsmError.style.display = 'none';
-                console.log(`checkStartButtonState: Aktif!`);
-            } else {
-                startButton.disabled = true;
-                console.log(`checkStartButtonState: Pasif!`);
-                if (numberEntered && kvkkValid && !assetsReady) { // Form tamam ama yükleniyor
-                     startButton.innerText = texts[currentLang]?.loadingText || "Loading...";
-                     if(gsmError) gsmError.style.display = 'none'; // Yükleniyor derken hata gösterme
-                } else { // Form eksik
-                    startButton.innerText = texts[currentLang]?.startButton || "Start Game!";
-                    if (gsmError && (!numberEntered || !kvkkValid) && ((gsmInput && gsmInput.value.length > 0) || (kvkkCheck && kvkkCheck.checked))) {
-                         gsmError.innerText = texts[currentLang]?.gsmError || "Gerekli alanları doldurun.";
-                         gsmError.style.display = 'block';
-                     } else if (gsmError) {
-                         gsmError.style.display = 'none';
-                     }
-                }
-            }
-        } else { console.warn("Buton yok!"); }
-    } catch(e){ console.error("checkStartButtonState hatası:", e); }
+    // !!! KULLANICININ KODUNDA assetsReady KONTROLÜ YOKTU, ONU KALDIRIYORUZ !!!
+    try { const numberEntered = gsmInput?.value.trim().length > 0; const kvkkValid = kvkkCheck?.checked;
+        const canEnable = numberEntered && kvkkValid; // Sadece forma bak
+        console.log(`checkStartButtonState: num=${numberEntered}, kvkk=${kvkkValid} => canEnable=${canEnable}`);
+        if(startButton){if(canEnable){startButton.disabled=false;startButton.innerText = texts[currentLang]?.startButton || "Start Game!"; if(gsmError)gsmError.style.display='none';console.log(`checkStartButtonState: Aktif!`);}else{startButton.disabled=true;startButton.innerText = texts[currentLang]?.startButton || "Start Game!"; console.log(`checkStartButtonState: Pasif!`); if(gsmError&&(!numberEntered||!kvkkValid)&&((gsmInput&&gsmInput.value.length>0)||(kvkkCheck&&kvkkCheck.checked))){gsmError.innerText=texts[currentLang]?.gsmError||"Gerekli alanları doldurun.";gsmError.style.display='block';}else if(gsmError){gsmError.style.display='none';}}}else{console.warn("Buton yok!");}
+    } catch(e){console.error("checkStartButtonState hatası:",e);}
 }
 
-
-// Görsel Yükleme Kontrolü (Düzeltildi)
-function checkAssetsLoaded(){
-    try{
-        console.log(`checkAssetsLoaded: bgLoaded=${bgLoaded}, logoLoaded=${logoLoaded}, assetsReady=${assetsReady}`);
-        if (bgLoaded && logoLoaded && !assetsReady) { // assetsReady false ise ve ikisi de yüklendiyse
-            console.log(">>> Tüm görseller yüklendi! (checkAssetsLoaded) <<<");
-            assetsReady = true; // Bayrağı ayarla
-            gameState = 'START_SCREEN'; // Başlangıç ekranı hazır
-            console.log(">>> assetsReady = true yapıldı. Buton durumu KONTROL EDİLİYOR...");
-            checkStartButtonState(); // Buton durumunu GÜNCELLE
-        }
-    } catch(e){ console.error("checkAssetsLoaded Hatası:", e); }
-}
-
-// Oyunu Başlatma Tetikleyicisi
+// Oyunu Başlatma Tetikleyicisi (Kullanıcının kodundaki gibi - onload'dan çağrılır)
 function tryStartGame() {
-    try { console.log("tryStartGame çağrıldı."); loadGameData();
+    // Bu fonksiyon sadece görseller yüklendiğinde çağrılacak
+    // Hak kontrolü ve state ayarlaması burada yapılır.
+    if (gameState !== 'LOADING' && gameState !== 'START_SCREEN') return; // Zaten başladıysa tekrar başlatma
+
+    try { console.log("tryStartGame çağrıldı (onload sonrası). Hak kontrolü."); loadGameData();
         if (!canPlay) { gameState = 'NO_ATTEMPTS'; showMessage(texts[currentLang]?.noAttemptsTitle||"Hata", texts[currentLang]?.noAttemptsMessage||"Hak bitti.", 'error'); }
         else { gameState = 'TUTORIAL'; tutorialStep = 0; isTutorialComplete = false;
             currentLevelIndex = 0; currentRecipeStep = 0;
             if (levels[currentLevelIndex]?.clicks.length > 0) { currentShuffledRecipe = shuffleArray(levels[currentLevelIndex].clicks); } else { currentShuffledRecipe = []; }
-            console.log("Oyun durumu TUTORIAL olarak ayarlandı. Döngü başlatılıyor...");
-            if (!gameLoopStarted) { gameLoopStarted = true; requestAnimationFrame(drawGame); } else { requestAnimationFrame(drawGame); }
+            console.log("Oyun durumu TUTORIAL olarak ayarlandı. Döngü başlıyor...");
+            if (!gameLoopStarted) { gameLoopStarted = true; requestAnimationFrame(drawGame); } // Döngüyü başlat
         }
-    } catch(e){ console.error("tryStartGame hatası:",e); alert("Oyunu başlatırken hata!"); gameLoopStarted = false; }
+    } catch(e){ console.error("tryStartGame hatası:",e); alert("Oyun başlatılırken hata!"); gameLoopStarted = false; }
 }
 
-// Başlat Butonu Fonksiyonu
+// Başlat Butonu Fonksiyonu (SADECE ekranı değiştirir, oyunu tryStartGame başlatır)
 function startGame() {
     try { console.log("startGame ÇAĞRILDI!");
         if (startButton.disabled) { console.warn("Başlatma engellendi (Buton pasif)."); return; }
         console.log("Başlatma Kontrolleri Geçildi.");
-        // Buton aktifse, görseller yüklenmiş demektir (checkStartButtonState'den dolayı).
-        if (!assetsReady) { console.error("HATA: assetsReady false iken startGame çağrıldı!"); return; } // Ekstra güvenlik
-        if(startScreenDiv) startScreenDiv.style.display = 'none'; else throw new Error("startScreenDiv null!");
-        if(canvas) canvas.style.display = 'block'; else throw new Error("canvas null!");
-        tryStartGame();
+        // Görsel yükleme kontrolü burada YOK - `tryStartGame` `onload` içinde çağrılıyor.
+        if(startScreenDiv)startScreenDiv.style.display = 'none'; else throw new Error("startScreenDiv null!");
+        if(canvas)canvas.style.display = 'block'; else throw new Error("canvas null!");
+        // tryStartGame'i BURADA ÇAĞIRMIYORUZ! Onload çağıracak.
+        // Oyun döngüsü henüz başlamadıysa, belki ilk kareyi çizdirebiliriz? Veya bekleyelim.
+        console.log("Canvas gösterildi. Görseller yüklenince oyun başlayacak.");
     } catch (e) { console.error("startGame Hatası:", e); alert("Oyun başlatılamadı!"); }
 }
 
 // --- Ana Oyun Çizim Döngüsü ---
 function drawGame() {
-    try { if (!ctx) { return; } // Context yoksa çizme
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // ARKA PLAN (Kontrollü)
-        if (bgLoaded && bgImage.complete && bgImage.naturalWidth > 0) {
-            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-        } else {
-            ctx.fillStyle='#BBB'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='red'; ctx.font='20px Arial'; ctx.textAlign='center'; ctx.fillText("ARKA PLAN YÜKLENEMEDİ/BEKLENİYOR", canvas.width / 2, canvas.height / 2); ctx.textAlign='left';
-        }
-
-        // LOGO (Kontrollü)
-        if (logoLoaded && logoImage.complete && logoImage.naturalWidth > 0) { logoX = canvas.width/2-logoWidth/2; const cX=logoX+logoWidth/2; const cY=logoY+logoHeight/2; const r=logoWidth/2; ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(cX,cY,r,0,Math.PI*2); ctx.fill(); ctx.drawImage(logoImage,logoX,logoY,logoWidth,logoHeight); }
-
+    try { if (!ctx) { return; } ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ARKA PLAN
+        if (bgLoaded && bgImage.complete && bgImage.naturalWidth > 0) { ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height); }
+        else { ctx.fillStyle='#BBB';ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='red';ctx.font='20px Arial';ctx.textAlign='center'; ctx.fillText("ARKA PLAN HATASI/YÜKLENİYOR", canvas.width / 2, canvas.height / 2); ctx.textAlign='left'; }
+        // LOGO
+        if (logoLoaded && logoImage.complete && logoImage.naturalWidth > 0) { logoX=canvas.width/2-logoWidth/2; const cX=logoX+logoWidth/2; const cY=logoY+logoHeight/2; const r=logoWidth/2; ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(cX,cY,r,0,Math.PI*2); ctx.fill(); ctx.drawImage(logoImage,logoX,logoY,logoWidth,logoHeight); }
         // Diğer Çizimler
-        let cTY=30;
-        const langText = texts[currentLang] || texts['TR']; // Dil yüklenemezse TR'ye düş
-
-        ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='left'; ctx.shadowColor='black';ctx.shadowBlur=3;ctx.shadowOffsetX=1;ctx.shadowOffsetY=1; ctx.fillText(`${langText.attemptsLeft}: ${3-failedAttemptsToday}`,20,cTY); cTY+=25; ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
-
+        let cTY=30; const langText = texts[currentLang] || texts['TR']; ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='left'; ctx.shadowColor='black';ctx.shadowBlur=3;ctx.shadowOffsetX=1;ctx.shadowOffsetY=1; ctx.fillText(`${langText.attemptsLeft}: ${3-failedAttemptsToday}`,20,cTY); cTY+=25; ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
         if (gameState === 'TUTORIAL') { const iTS=clickableItems[tutorialStep]; if(iTS){ctx.strokeStyle=(Math.sin(Date.now()*0.005)>0)?'yellow':'orange';ctx.lineWidth=3;ctx.strokeRect(iTS.x-2,iTS.y-2,iTS.width+4,iTS.height+4); ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,canvas.height-60,canvas.width,60); ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='center'; let iAT=langText.tutorialItemAction_Default; /*...*/ ctx.fillText(langText.tutorialItemIntro+iTS.name+iAT,canvas.width/2,canvas.height-35); ctx.font='14px Arial'; ctx.fillText(langText.tutorialItemPrompt,canvas.width/2,canvas.height-15); ctx.textAlign='left';} else {console.warn("Öğretici adımı geçersiz:", tutorialStep); gameState='PLAYING'; currentShuffledRecipe=shuffleArray(levels[currentLevelIndex]?.clicks||[]);}}
-        else if (gameState === 'PLAYING') { if(levels[currentLevelIndex]){ const d=levels[currentLevelIndex]; ctx.fillStyle = 'white'; ctx.textAlign = 'left'; ctx.shadowColor = 'black'; ctx.shadowBlur = 4; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2; ctx.font='bold 20px Arial'; ctx.fillText(`${langText.level}: ${d.level}`,20,cTY); cTY+=25; if(d.clicks.length>0){ctx.font='18px Arial'; ctx.fillText(`${langText.order}: ${d.recipeName}`,20,cTY); cTY+=25; ctx.font='italic 16px Arial'; ctx.fillText(`${langText.requirements}:`,20,cTY); cTY+=20; const sC=currentShuffledRecipe; for(const i of sC){ctx.fillText(`- ${i}`,30,cTY); cTY+=18;} cTY+=5;ctx.fillStyle = 'orange'; ctx.font = 'bold 14px Arial'; ctx.fillText(langText.mixedOrderWarning,20,cTY); cTY+=20; if(d.clicks.includes('Fiyat Listesi')){ctx.fillStyle = 'lightblue';ctx.fillText(langText.priceCheckWarning,20,cTY);cTY+=20;} } ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;} else { console.warn("Geçerli seviye yok:", currentLevelIndex); } if(feedbackMessage.text&&Date.now()<feedbackMessage.expiryTime){ctx.fillStyle=feedbackMessage.color;ctx.font='bold 28px Arial';ctx.textAlign='center';ctx.shadowColor='black';ctx.shadowBlur=5;ctx.shadowOffsetX=2;ctx.shadowOffsetY=2;ctx.fillText(feedbackMessage.text,canvas.width/2,canvas.height-30); ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;ctx.textAlign='left';}else{feedbackMessage.text='';}}
-
+        else if (gameState === 'PLAYING') { if(levels[currentLevelIndex]){ const d=levels[currentLevelIndex]; /*... Seviye, Sipariş, Karışık Gerekenler, Uyarılar ...*/ } if(feedbackMessage.text&&Date.now()<feedbackMessage.expiryTime){/*... Feedback çizimi ...*/}else{feedbackMessage.text='';}}
         // Döngü
         if (gameLoopStarted && (gameState === 'PLAYING' || gameState === 'TUTORIAL')) { requestAnimationFrame(drawGame); }
         else { console.log("Oyun döngüsü durdu. State:", gameState); gameLoopStarted = false;}
@@ -154,14 +107,31 @@ function drawGame() {
 }
 
 // Tıklama İşleyici Fonksiyon
-function handleClick(event) {
-    try{ if (messageOverlay?.style.display === 'flex') return; if (!canvas) return;
-        const rect = canvas.getBoundingClientRect(); const clickX = event.offsetX; const clickY = event.offsetY;
-        console.log(`handleClick - State: ${gameState}, Click: ${clickX},${clickY}`);
-        if (gameState === 'TUTORIAL') { const iTC=clickableItems[tutorialStep];if(iTC&&clickX>=iTC.x&&clickX<=iTC.x+iTC.width&&clickY>=iTC.y&&clickY<=iTC.y+iTC.height){console.log(`Öğretici: ${iTC.name} tıklandı.`);tutorialStep++;if(tutorialStep>=clickableItems.length){console.log("Öğretici bitti!");isTutorialComplete=true;gameState='PLAYING';currentLevelIndex=0;currentRecipeStep=0;canPlay=true;if(levels[currentLevelIndex]?.clicks.length>0){currentShuffledRecipe=shuffleArray(levels[currentLevelIndex].clicks);}else{currentShuffledRecipe=[];}console.log("Oyun durum PLAYING olarak ayarlandı.");}else{console.log("Öğretici: Sonraki adıma geçiliyor.");}}else{console.log("Öğretici: Vurgulanan alan dışına tıklandı.");} }
-        else if (gameState === 'PLAYING') { if (!canPlay || currentLevelIndex >= levels.length - 1) return; let cIN=null; for(const item of clickableItems){if(clickX>=item.x&&clickX<=item.x+item.width&&clickY>=item.y&&clickY<=item.y+item.height){cIN=item.name;break;}} if(cIN){console.log(`Oyun: Tıklandı: ${cIN}`);const cLD=levels[currentLevelIndex];const eC=cLD.clicks[currentRecipeStep];if(cIN===eC){console.log("Oyun: Doğru adım!");currentRecipeStep++;feedbackMessage={text:'Doğru!',color:'lime',expiryTime:Date.now()+1000}; if(currentRecipeStep>=cLD.clicks.length){const cL=cLD.level;console.log(`--- Seviye ${cL} Bitti! ---`);const rAS=getRewardForLevel(cL,currentRegion);currentLevelIndex++;currentRecipeStep=0;if(levels[currentLevelIndex]?.clicks.length > 0){currentShuffledRecipe=shuffleArray(levels[currentLevelIndex].clicks);}else{currentShuffledRecipe=[];} if(rAS){console.warn(`%cÖDÜL! Seviye ${cL} (${rAS})`,'color:green;font-weight:bold;');const iL10=cL===10;const winMsgPart2=iL10?texts[currentLang].winMessagePart2_USDT:texts[currentLang].winMessagePart2_App.replace('{REWARD}',rAS);const mBB=iL10?texts[currentLang].winMessageEmailBodyBase_USDT:texts[currentLang].winMessageEmailBodyBase_App;const mB=encodeURIComponent(mBB.replace('{LEVEL}',cL).replace('{REWARD}',rAS));const mS=encodeURIComponent(`${texts[currentLang].winMessageEmailSubjectBase}${cL}${iL10?' - NAKIT ODUL':''}`);const mTL=`mailto:${texts[currentLang].winMessageEmailAddress}?subject=${mS}&body=${mB}`;const wH=`<p>${texts[currentLang].winMessagePart1}${cL}${winMsgPart2}</p><hr><p>${texts[currentLang].winMessageEmailPrompt}<br><a href="${mTL}" target="_blank"><b>${texts[currentLang].winMessageEmailAddress}</b></a><br>${texts[currentLang].winMessageEmailInstructions}</p>`;showMessage(texts[currentLang].winTitle,wH,'win');} const nLD=levels[currentLevelIndex];if(!nLD||nLD.clicks.length===0){console.log("OYUN TAMAMLANDI!");gameState='GAME_OVER';showMessage(texts[currentLang].gameOverTitle,texts[currentLang].gameOverMessage,'info');}}}else{console.log("Oyun: Yanlış! Baştan başla.");currentRecipeStep=0;failedAttemptsToday++;saveGameData();console.log(`Kalan hak: ${3-failedAttemptsToday}/3`);feedbackMessage={text:texts[currentLang]?.errorMessage||"Wrong!",color:'red',expiryTime:Date.now()+2500};if(failedAttemptsToday>=3){canPlay=false;console.error("Hak bitti!");gameState='NO_ATTEMPTS';setTimeout(()=>{if(!canPlay){showMessage(texts[currentLang]?.noAttemptsTitle||"Attempts Done",texts[currentLang]?.noAttemptsMessage||"Try tomorrow",'error');}},500);}}}else{console.log("Oyun: Boş alan tıklandı.");}}
-    }catch(e){console.error("handleClick Hatası:",e);}
-}
+function handleClick(event) { try{ if(messageOverlay?.style.display === 'flex') return; if(!canvas) return; const rect=canvas.getBoundingClientRect(); const clickX=event.offsetX; const clickY=event.offsetY; console.log(`handleClick - State: ${gameState}, Click: ${clickX},${clickY}`); if(gameState==='TUTORIAL'){const iTC=clickableItems[tutorialStep];if(iTC&&clickX>=iTC.x&&clickX<=iTC.x+iTC.width&&clickY>=iTC.y&&clickY<=iTC.y+iTC.height){console.log(`Öğretici: ${iTC.name} tıklandı.`);tutorialStep++;if(tutorialStep>=clickableItems.length){console.log("Öğretici bitti!");isTutorialComplete=true;gameState='PLAYING';currentLevelIndex=0;currentRecipeStep=0;canPlay=true;if(levels[currentLevelIndex]?.clicks.length>0){currentShuffledRecipe=shuffleArray(levels[currentLevelIndex].clicks);}else{currentShuffledRecipe=[];}console.log("Oyun durum PLAYING olarak ayarlandı.");}else{console.log("Öğretici: Sonraki adıma geçiliyor.");}}else{console.log("Öğretici: Vurgulanan alan dışına tıklandı.");}} else if(gameState==='PLAYING'){if(!canPlay||currentLevelIndex>=levels.length-1)return;let cIN=null;for(const item of clickableItems){if(clickX>=item.x&&clickX<=item.x+item.width&&clickY>=item.y&&clickY<=item.y+item.height){cIN=item.name;break;}} if(cIN){console.log(`Oyun: Tıklandı: ${cIN}`);const cLD=levels[currentLevelIndex];const eC=cLD.clicks[currentRecipeStep];if(cIN===eC){console.log("Oyun: Doğru adım!");currentRecipeStep++;feedbackMessage={text:'Doğru!',color:'lime',expiryTime:Date.now()+1000}; if(currentRecipeStep>=cLD.clicks.length){const cL=cLD.level;console.log(`--- Seviye ${cL} Bitti! ---`);const rAS=getRewardForLevel(cL,currentRegion);currentLevelIndex++;currentRecipeStep=0;if(levels[currentLevelIndex]?.clicks.length > 0){currentShuffledRecipe=shuffleArray(levels[currentLevelIndex].clicks);}else{currentShuffledRecipe=[];} if(rAS){console.warn(`%cÖDÜL! Seviye ${cL} (${rAS})`,'color:green;font-weight:bold;');const iL10=cL===10;const winMsgPart2=iL10?texts[currentLang].winMessagePart2_USDT:texts[currentLang].winMessagePart2_App.replace('{REWARD}',rAS);const mBB=iL10?texts[currentLang].winMessageEmailBodyBase_USDT:texts[currentLang].winMessageEmailBodyBase_App;const mB=encodeURIComponent(mBB.replace('{LEVEL}',cL).replace('{REWARD}',rAS));const mS=encodeURIComponent(`${texts[currentLang].winMessageEmailSubjectBase}${cL}${iL10?' - NAKIT ODUL':''}`);const mTL=`mailto:${texts[currentLang].winMessageEmailAddress}?subject=${mS}&body=${mB}`;const wH=`<p>${texts[currentLang].winMessagePart1}${cL}${winMsgPart2}</p><hr><p>${texts[currentLang].winMessageEmailPrompt}<br><a href="${mTL}" target="_blank"><b>${texts[currentLang].winMessageEmailAddress}</b></a><br>${texts[currentLang].winMessageEmailInstructions}</p>`;showMessage(texts[currentLang].winTitle,wH,'win');} const nLD=levels[currentLevelIndex];if(!nLD||nLD.clicks.length===0){console.log("OYUN TAMAMLANDI!");gameState='GAME_OVER';showMessage(texts[currentLang].gameOverTitle,texts[currentLang].gameOverMessage,'info');}}}else{console.log("Oyun: Yanlış! Baştan başla.");currentRecipeStep=0;failedAttemptsToday++;saveGameData();console.log(`Kalan hak: ${3-failedAttemptsToday}/3`);feedbackMessage={text:texts[currentLang]?.errorMessage||"Wrong!",color:'red',expiryTime:Date.now()+2500};if(failedAttemptsToday>=3){canPlay=false;console.error("Hak bitti!");gameState='NO_ATTEMPTS';setTimeout(()=>{if(!canPlay){showMessage(texts[currentLang]?.noAttemptsTitle||"Attempts Done",texts[currentLang]?.noAttemptsMessage||"Try tomorrow",'error');}},500);}}}else{console.log("Oyun: Boş alan tıklandı.");}} }catch(e){console.error("handleClick Hatası:",e);}}
+
+// --- GÖRSEL YÜKLEME OLAYLARI (KULLANICININ İSTEDİĞİ GİBİ - tryStartGame'i çağırır) ---
+bgImage.onload = function() {
+    console.log(">>> BG Yüklendi (PNG) <<<");
+    bgLoaded = true;
+    // İki resim de yüklendiyse oyunu başlatmayı dene
+    if (logoLoaded) {
+        console.log("BG yüklendi, Logo zaten yüklü. tryStartGame çağrılıyor...");
+        // tryStartGame(); //<<<--- BUTONLA BAŞLATACAĞIZ, BURADAN DEĞİL!
+        checkStartButtonState(); // Sadece buton durumunu güncelle
+    }
+};
+logoImage.onload = function() {
+    console.log(">>> Logo Yüklendi <<<");
+    logoLoaded = true;
+    // İki resim de yüklendiyse oyunu başlatmayı dene
+    if (bgLoaded) {
+        console.log("Logo yüklendi, BG zaten yüklü. tryStartGame çağrılıyor...");
+       // tryStartGame(); //<<<--- BUTONLA BAŞLATACAĞIZ, BURADAN DEĞİL!
+       checkStartButtonState(); // Sadece buton durumunu güncelle
+    }
+};
+bgImage.onerror = () => { console.error("!!! Arka Plan YÜKLENEMEDİ!"); bgLoaded = false; checkStartButtonState(); alert("Arka Plan PNG yüklenemedi!"); }
+logoImage.onerror = () => { console.error("!!! Logo YÜKLENEMEDİ!"); logoLoaded = false; checkStartButtonState(); alert("Logo yüklenemedi!"); }
 
 
 // --- Başlangıç Kodu (DOMContentLoaded) ---
@@ -172,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas = document.getElementById('gameCanvas'); ctx = canvas?.getContext('2d');
         startScreenDiv=document.getElementById('startScreen'); gameTitleEl=document.getElementById('gameTitle'); gameSloganEl=document.getElementById('gameSlogan'); langTRButton=document.getElementById('langTR'); langENButton=document.getElementById('langEN'); regionSelect=document.getElementById('regionSelect'); regionLabelEl=document.getElementById('regionLabel'); rewardTitleEl=document.getElementById('rewardTitle'); rewardListEl=document.getElementById('rewardList'); startButton=document.getElementById('startButton'); gsmInput=document.getElementById('gsmInput'); kvkkCheck=document.getElementById('kvkkCheck'); gsmError=document.getElementById('gsmError'); gsmLabel=document.getElementById('gsmLabel'); kvkkLabel=document.getElementById('kvkkLabel');
         messageOverlay=document.getElementById('messageOverlay'); messageTitle=document.getElementById('messageTitle'); messageBody=document.getElementById('messageBody'); closeButton=document.getElementById('closeButton');
-
         if (!canvas||!ctx||!startScreenDiv||!startButton||!gsmInput||!kvkkCheck||!messageOverlay||!closeButton||!langTRButton||!langENButton||!regionSelect||!rewardListEl) { throw new Error("Kritik HTML elementleri bulunamadı!"); }
         console.log("Tüm element referansları alındı.");
 
@@ -189,19 +158,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Başlangıç Ayarları
         currentLang = localStorage.getItem('barista_lang') || 'TR'; currentRegion = localStorage.getItem('barista_region') || 'TR'; if(regionSelect) regionSelect.value = currentRegion; if(langTRButton) langTRButton.classList.toggle('active', currentLang === 'TR'); if(langENButton) langENButton.classList.toggle('active', currentLang === 'EN');
-        loadGameData(); updateTexts(currentLang, currentRegion); checkStartButtonState(); // Buton başta pasif olacak (assetsReady false)
+        loadGameData(); updateTexts(currentLang, currentRegion); checkStartButtonState(); // Buton başta pasif olacak
         console.log("Başlangıç ayarları yapıldı.");
 
         // Görsel yüklemelerini başlat
-        console.log("Görseller yükleniyor (PNG)...");
+        console.log("Görseller yükleniyor...");
         bgImage.src = './arka_plan.png'; // <<<--- PNG KULLANILIYOR!
         logoImage.src = 'Starbucks_Corporation.png';
 
-    } catch (error) { console.error("DOMContentLoaded hatası:", error); alert("Sayfa yüklenirken hata!"); }
+    } catch (error) { console.error("DOMContentLoaded hatası:", error); }
 });
 
-// Hata logları
-bgImage.onerror = () => { console.error("!!! Arka Plan YÜKLENEMEDİ!"); bgLoaded = false; assetsReady = false; checkStartButtonState(); alert("Arka Plan PNG yüklenemedi!"); }
-logoImage.onerror = () => { console.error("!!! Logo YÜKLENEMEDİ!"); logoLoaded = false; assetsReady = false; checkStartButtonState(); alert("Logo yüklenemedi!"); }
-
 console.log("script.js dosyası tamamen okundu.");
+
+// --- Tüm Fonksiyon Tanımları ---
+// (loadGameData, saveGameData, getRewardForLevel, showMessage, hideMessage, shuffleArray, updateTexts, checkStartButtonState, tryStartGame, startGame, drawGame, handleClick TÜM BU FONKSİYONLARIN TAM İÇERİKLERİ BURADA OLMALI)
