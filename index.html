@@ -3,31 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#006241">
     <title>Kyrosil Starbucks Barista</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="startScreen">
-        <div class="logo-container"> <img src="indir.png" alt="Kyrosil Logo" class="logo"> <img src="Starbucks_Corporation.png" alt="Starbucks Logo" class="logo"> </div>
-        <h1 id="gameTitle"></h1> <p id="gameSlogan"></p>
-        <div class="settings">
-             <div class="language-select"> <button id="langTR" class="active">TR</button> <button id="langEN">EN</button> </div>
-             <div class="region-select"> <label for="regionSelect" id="regionLabel"></label> <select id="regionSelect"><option value="TR">Türkiye (TL)</option><option value="EU">Europe/USA (USD)</option></select> </div>
+        <div class="logo-container">
+            <img src="indir.png" alt="Kyrosil Logo" class="logo" loading="lazy">
+            <img src="Starbucks_Corporation.png" alt="Starbucks Logo" class="logo" loading="lazy">
+            <div class="coffee-icon" aria-hidden="true"></div> <!-- Kahve fincanı ikonu -->
         </div>
-        <div class="rewards-info"> <h3 id="rewardTitle"></h3> <ul id="rewardList"></ul> </div>
+        <h1 id="gameTitle"><span class="steam" aria-hidden="true"></span></h1>
+        <p id="gameSlogan"></p>
+        <div class="settings">
+            <div class="language-select">
+                <button id="langTR" class="active" aria-label="Türkçe dilini seç">TR</button>
+                <button id="langEN" aria-label="İngilizce dilini seç">EN</button>
+            </div>
+            <div class="region-select">
+                <label for="regionSelect" id="regionLabel"></label>
+                <select id="regionSelect">
+                    <option value="TR">Türkiye (TL)</option>
+                    <option value="EU">Europe/USA (USD)</option>
+                </select>
+            </div>
+        </div>
+        <div class="rewards-info">
+            <h3 id="rewardTitle"></h3>
+            <ul id="rewardList"></ul>
+        </div>
         <div class="gsm-input">
             <label for="gsmInput" id="gsmLabel"></label>
             <input type="tel" id="gsmInput" name="gsmInput" placeholder="" inputmode="numeric" autocomplete="off">
             <div class="kvkk-consent">
-                 <input type="checkbox" id="kvkkCheck" name="kvkkCheck">
-                 <label for="kvkkCheck" id="kvkkLabel"></label>
-             </div>
-             <p id="gsmError" class="error-message" style="display: none;"></p>
+                <input type="checkbox" id="kvkkCheck" name="kvkkCheck">
+                <label for="kvkkCheck" id="kvkkLabel"></label>
+            </div>
+            <p id="gsmError" class="error-message" style="display: none;"></p>
         </div>
-        <button id="startButton" disabled></button>
+        <button id="startButton" disabled aria-label="Oyunu başlat"></button>
     </div>
-    <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
-    <div id="messageOverlay" class="overlay" style="display: none;"> <div class="message-box"><h2 id="messageTitle">...</h2><div id="messageBody">...</div><button id="closeButton">Tamam</button></div> </div>
+    <canvas id="gameCanvas" width="800" height="600" style="display: none;" aria-hidden="true"></canvas>
+    <div id="messageOverlay" class="overlay" style="display: none;">
+        <div class="message-box">
+            <h2 id="messageTitle">...</h2>
+            <div id="messageBody">...</div>
+            <button id="closeButton" aria-label="Mesajı kapat">Tamam</button>
+        </div>
+    </div>
     <script src="script.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93ab6696ee147b99',t:'MTc0NjM5NzM4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
