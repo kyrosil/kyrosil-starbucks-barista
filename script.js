@@ -20,88 +20,61 @@ const clickableItems = [{name:'Espresso Makinesi',x:605,y:300,width:50,height:60
 const levels = [{level:1,recipeName:"İlk Sipariş (Espresso)",clicks:['Sipariş Fişi','Espresso Makinesi']},{level:2,recipeName:"Caffè Latte (Fiyatlı)",clicks:['Espresso Makinesi','Süt Kutusu','Fiyat Listesi']},{level:3,recipeName:"Vanilya Şur. Soğuk Kahve",clicks:['Bardak Alanı','Buzdolabı','Espresso Makinesi','Şurup Pompası']},{level:4,recipeName:"Kedi Molası & Yeşil Çay",clicks:['Tezgahtaki Kedi','Yeşil Şişe','Bardak Alanı']},{level:5,recipeName:"Yoğun Talep",clicks:['Sipariş Fişi','Espresso Makinesi','Süt Kutusu','Espresso Makinesi']},{level:6,recipeName:"Hesaplı Şuruplu Latte",clicks:['Bardak Alanı','Espresso Makinesi','Şurup Pompası','Süt Kutusu','Fiyat Listesi','Kasa']},{level:7,recipeName:"Yeşil & Vanilya & Buz",clicks:['Yeşil Şişe','Şurup Pompası','Buzdolabı','Bardak Alanı']},{level:8,recipeName:"Tam Menü (Basit)",clicks:['Sipariş Fişi','Bardak Alanı','Espresso Makinesi','Süt Kutusu','Tatlı Dolabı','Kasa']},{level:9,recipeName:"Pati Deluxe Özel",clicks:['Bardak Alanı','Buzdolabı','Yeşil Şişe','Şurup Pompası','Espresso Makinesi','Tezgahtaki Kedi','Kasa']},{level:10,recipeName:"USTALIK ESERİ!",clicks:['Sipariş Fişi','Fiyat Listesi','Bardak Alanı','Buzdolabı','Yeşil Şişe','Şurup Pompası','Espresso Makinesi','Süt Kutusu','Tatlı Dolabı','Tezgahtaki Kedi','Kasa']},{level:11,recipeName:"OYUN BİTTİ!",clicks:[]}];
 
 // --- Yardımcı Fonksiyon Tanımları ---
-// (Tüm fonksiyon tanımları BURADA, DOMContentLoaded'den ÖNCE)
-function loadGameData(){try{const today=new Date().toISOString().split('T')[0];lastPlayDate=localStorage.getItem('barista_lastPlayDate')||today;failedAttemptsToday=parseInt(localStorage.getItem('barista_failedAttempts')||'0',10);if(lastPlayDate!==today){console.log("Yeni gün!");failedAttemptsToday=0;lastPlayDate=today;saveGameData();} if(failedAttemptsToday>=3){canPlay=false;console.warn("Hak bitti (loadGameData).");}else{canPlay=true;} console.log(`Bugünkü hata hakkı: ${3-failedAttemptsToday}/3`);}catch(e){console.error("loadGameData Hatası:",e);canPlay=true;}}
+function loadGameData(){try{const today=new Date().toISOString().split('T')[0];lastPlayDate=localStorage.getItem('barista_lastPlayDate')||today;failedAttemptsToday=parseInt(localStorage.getItem('barista_failedAttempts')||'0',10);if(lastPlayDate!==today){console.log("Yeni gün!");failedAttemptsToday=0;lastPlayDate=today;saveGameData();} if(failedAttemptsToday>=3){canPlay=false;console.warn("Hak bitti (loadGameData).");}else{canPlay=true;} console.log(`BG Hata Hakkı: ${3-failedAttemptsToday}/3`);}catch(e){console.error("loadGameData Hatası:",e);canPlay=true;}}
 function saveGameData(){try{localStorage.setItem('barista_lastPlayDate',lastPlayDate);localStorage.setItem('barista_failedAttempts',failedAttemptsToday.toString());}catch(e){console.error("saveGameData Hatası:",e);}}
 function getRewardForLevel(level, region) { return rewardTiers[region]?.[level] || null; }
-function showMessage(title, bodyHtml, type='info'){ try{ console.log(`showMessage Çağrıldı: Tip=${type}, Başlık=${title}`); if(!messageOverlay||!messageTitle||!messageBody) {console.error("Mesaj elementleri bulunamadı!"); return;} messageTitle.innerText=title; messageBody.innerHTML=bodyHtml; messageOverlay.className=`overlay message-${type}`; messageOverlay.style.display='flex'; canPlay=false; } catch(e) { console.error("showMessage Hatası:", e); }}
-function hideMessage(){ try{ if(!messageOverlay) {console.error("Mesaj overlay elementi bulunamadı!"); return;} messageOverlay.style.display='none'; if(failedAttemptsToday<3 && currentLevelIndex<levels.length-1 && gameState==='PLAYING'){canPlay=true; console.log("Mesaj kapatıldı, canPlay=true.");} else { console.log("Mesaj kapatıldı, canPlay false."); canPlay = false; } } catch(e) { console.error("hideMessage Hatası:", e); }}
+function showMessage(title, bodyHtml, type='info'){ try{ console.log(`showMessage: Tip=${type}, Başlık=${title}`); if(!messageOverlay||!messageTitle||!messageBody)throw new Error("Mesaj elementleri bulunamadı!"); messageTitle.innerText=title; messageBody.innerHTML=bodyHtml; messageOverlay.className=`overlay message-${type}`; messageOverlay.style.display='flex'; canPlay=false; } catch(e) { console.error("showMessage Hatası:", e); }}
+function hideMessage(){ try{ if(!messageOverlay) throw new Error("Mesaj overlay elementi bulunamadı!"); messageOverlay.style.display='none'; if(failedAttemptsToday<3 && currentLevelIndex<levels.length-1 && gameState==='PLAYING'){canPlay=true; console.log("Mesaj kapatıldı, canPlay=true.");} else { console.log("Mesaj kapatıldı, canPlay false."); canPlay = false; } } catch(e) { console.error("hideMessage Hatası:", e); }}
 function shuffleArray(array){ if (!array || array.length === 0) return []; let ci=array.length,ri;const na=array.slice();while(ci!==0){ri=Math.floor(Math.random()*ci);ci--;[na[ci],na[ri]]=[na[ri],na[ci]];} return na; }
+function updateTexts(lang, region) { try { console.log(`updateTexts: Lang=${lang}, Region=${region}`); const t = texts[lang]; if (!t) throw new Error(`Metinler bulunamadı: ${lang}`); document.title = t.gameTitle; if(gameTitleEl) gameTitleEl.innerText = t.gameTitle; if(gameSloganEl) gameSloganEl.innerText = t.slogan; if(regionLabelEl) regionLabelEl.innerText = t.regionLabel; if(rewardTitleEl) rewardTitleEl.innerText = t.rewardTitle; if(startButton) startButton.innerText = t.startButton; if(closeButton) closeButton.innerText = t.closeButton; if(gsmLabel) gsmLabel.innerText = t.gsmLabel; if(kvkkLabel) kvkkLabel.innerHTML = t.kvkkLabel; if(gsmError) gsmError.innerText = t.gsmError; if(gsmInput && t.gsmPlaceholder) gsmInput.placeholder = t.gsmPlaceholder; if(rewardListEl) { rewardListEl.innerHTML = ''; const cR = rewardTiers[region]; if(cR){ const lTS=[2,4,6,8,10]; lTS.forEach(l => { const r=cR[l]; if(r){const li=document.createElement('li'); const iC=l===10; const rT=iC?t.rewardTypeCash:t.rewardTypeApp; li.innerHTML=`<strong>${t.level} ${l}:</strong> <span>${r}</span> <span class="prize-type">${rT}</span>`; rewardListEl.appendChild(li);}}); } else {console.warn("Ödül yok:", region);} } else {console.warn("rewardListEl yok");} if(langTRButton) langTRButton.classList.toggle('active', lang === 'TR'); if(langENButton) langENButton.classList.toggle('active', lang === 'EN'); document.documentElement.lang = lang.toLowerCase(); console.log(`Metinler ${lang} (${region}) güncellendi.`); } catch (error) { console.error("updateTexts hatası:", error); } }
+function checkStartButtonState() { try { const numberEntered = gsmInput?.value.trim().length > 0; const kvkkValid = kvkkCheck?.checked; const assetsAreReady = bgLoaded && logoLoaded; // Assets Ready KONTROLÜ GERİ GELDİ!
+    const canEnable = numberEntered && kvkkValid && assetsAreReady; console.log(`checkStartButtonState: num=${numberEntered}, kvkk=${kvkkValid}, assetsReady=${assetsReady} => canEnable=${canEnable}`); if(startButton){if(canEnable){startButton.disabled=false;if(gsmError)gsmError.style.display='none';console.log(`checkStartButtonState: Aktif!`);}else{startButton.disabled=true;console.log(`checkStartButtonState: Pasif!`); if(gsmError&&(!numberEntered||!kvkkValid)&&((gsmInput&&gsmInput.value.length>0)||(kvkkCheck&&kvkkCheck.checked))){gsmError.innerText=texts[currentLang]?.gsmError||"Gerekli alanları doldurun.";gsmError.style.display='block';}else if(gsmError){gsmError.style.display='none';} if(numberEntered && kvkkValid && !assetsReady) { startButton.innerText = texts[currentLang]?.loadingText || "Loading..."; } else { startButton.innerText = texts[currentLang]?.startButton || "Start Game!"; } }}else{console.warn("Buton yok!");}}catch(e){console.error("checkStartButtonState hatası:",e);} }
 
-function updateTexts(lang, region) {
-    try { console.log(`updateTexts: Lang=${lang}, Region=${region}`); const t = texts[lang]; if (!t) throw new Error(`Metinler bulunamadı: ${lang}`);
-        document.title = t.gameTitle || "Barista Game";
-        if(gameTitleEl) gameTitleEl.innerText = t.gameTitle; if(gameSloganEl) gameSloganEl.innerText = t.slogan; if(regionLabelEl) regionLabelEl.innerText = t.regionLabel; if(rewardTitleEl) rewardTitleEl.innerText = t.rewardTitle; if(startButton) startButton.innerText = t.startButton; if(closeButton) closeButton.innerText = t.closeButton; if(gsmLabel) gsmLabel.innerText = t.gsmLabel; if(kvkkLabel) kvkkLabel.innerHTML = t.kvkkLabel; if(gsmError) gsmError.innerText = t.gsmError; if(gsmInput) gsmInput.placeholder = t.gsmPlaceholder;
-        if(rewardListEl) { rewardListEl.innerHTML = ''; const cR = rewardTiers[region]; if(cR){ const lTS=[2,4,6,8,10]; lTS.forEach(l => { const r=cR[l]; if(r){const li=document.createElement('li'); const iC=l===10; const rT=iC?t.rewardTypeCash:t.rewardTypeApp; li.innerHTML=`<strong>${t.level} ${l}:</strong> <span>${r}</span> <span class="prize-type">${rT}</span>`; rewardListEl.appendChild(li);}}); } else {console.warn("Ödül yok:", region);} } else {console.warn("rewardListEl yok");}
-        if(langTRButton) langTRButton.classList.toggle('active', lang === 'TR'); if(langENButton) langENButton.classList.toggle('active', lang === 'EN');
-        document.documentElement.lang = lang.toLowerCase(); console.log(`Metinler ${lang} (${region}) güncellendi.`);
-    } catch (error) { console.error("updateTexts hatası:", error); }
-}
-
-function checkStartButtonState() {
-    try { const numberEntered = gsmInput?.value.trim().length > 0; const kvkkValid = kvkkCheck?.checked;
-        // assetsReady KONTROLÜ KALDIRILDI! Kullanıcının temel kodunda yoktu.
-        const canEnable = numberEntered && kvkkValid;
-        console.log(`checkStartButtonState: num=${numberEntered}, kvkk=${kvkkValid} => canEnable=${canEnable}`);
-        if(startButton){if(canEnable){startButton.disabled=false;if(gsmError)gsmError.style.display='none';console.log(`checkStartButtonState: Aktif!`);}else{startButton.disabled=true;console.log(`checkStartButtonState: Pasif!`); if(gsmError&&(!numberEntered||!kvkkValid)&&((gsmInput&&gsmInput.value.length>0)||(kvkkCheck&&kvkkCheck.checked))){gsmError.innerText=texts[currentLang]?.gsmError||"Gerekli alanları doldurun.";gsmError.style.display='block';}else if(gsmError){gsmError.style.display='none';}}}else{console.warn("Buton yok!");}
-    } catch(e){console.error("checkStartButtonState hatası:",e);}
-}
-
-// Oyunu Başlatma Tetikleyicisi (Doğrudan `onload` içinden çağrılacak - Kullanıcının kodu gibi)
-function tryStartGameIfReady() {
-    // Bu fonksiyon sadece görseller yüklendiğinde çağrılacak
-    if (bgLoaded && logoLoaded && !gameLoopStarted) {
-        console.log("tryStartGameIfReady çağrıldı, hak kontrolü.");
-        loadGameData(); // Hakları kontrol et
-        if (!canPlay) {
-            gameState = 'NO_ATTEMPTS';
-            // DOMContentLoaded içinde elementler atanmış olmalı
-            showMessage(texts[currentLang]?.noAttemptsTitle || "Hata", texts[currentLang]?.noAttemptsMessage || "Hak bitti.", 'error');
-        } else {
-            gameState = 'TUTORIAL'; tutorialStep = 0; isTutorialComplete = false;
-            currentLevelIndex = 0; currentRecipeStep = 0;
-            if (levels[currentLevelIndex]?.clicks.length > 0) { currentShuffledRecipe = shuffleArray(levels[currentLevelIndex].clicks); } else { currentShuffledRecipe = []; }
-            console.log("Oyun durumu TUTORIAL olarak ayarlandı. Döngü başlatılıyor...");
-            gameLoopStarted = true;
-            requestAnimationFrame(drawGame); // İlk çizimi tetikle
-        }
+// Oyunu Başlatma Tetikleyicisi (Sadece State Ayarlar, Hata Kontrolü Yok)
+function tryStartGame() {
+    console.log("tryStartGame çağrıldı.");
+    // Hak kontrolü DOMContentLoaded içinde yapıldı, burada tekrar yapmaya gerek yok?
+    // Veya oyun her başladığında yapılsın mı? Yapılsın.
+    loadGameData();
+    if (!canPlay) {
+        gameState = 'NO_ATTEMPTS';
+        showMessage(texts[currentLang]?.noAttemptsTitle || "Hata", texts[currentLang]?.noAttemptsMessage || "Hak bitti.", 'error');
     } else {
-        console.log("tryStartGameIfReady: Henüz tüm görseller yüklenmedi veya döngü zaten başladı.");
+        gameState = 'TUTORIAL'; tutorialStep = 0; isTutorialComplete = false;
+        currentLevelIndex = 0; currentRecipeStep = 0;
+        if (levels[currentLevelIndex]?.clicks.length > 0) { currentShuffledRecipe = shuffleArray(levels[currentLevelIndex].clicks); } else { currentShuffledRecipe = []; }
+        console.log("Oyun durumu TUTORIAL olarak ayarlandı. Döngü başlıyor...");
+        if (!gameLoopStarted) { gameLoopStarted = true; requestAnimationFrame(drawGame); }
+        else { requestAnimationFrame(drawGame); } // Zaten başlamışsa çizimi tetikle
     }
 }
 
-
-// Başlat Butonu Fonksiyonu (Sadece Ekran Değiştirir)
+// Başlat Butonu Fonksiyonu
 function startGame() {
     try { console.log("startGame ÇAĞRILDI!");
         if (startButton.disabled) { console.warn("Başlatma engellendi (Buton pasif)."); return; }
         console.log("Başlatma Kontrolleri Geçildi.");
-        // Görsel yükleme kontrolü burada YOK, onload hallediyor.
-        if(startScreenDiv) startScreenDiv.style.display = 'none'; else throw new Error("startScreenDiv null!");
-        if(canvas) canvas.style.display = 'block'; else throw new Error("canvas null!");
-        // tryStartGame'i BURADA ÇAĞIRMA! Onload çağıracak.
-        // Sadece oyun döngüsünün başlamadığından emin ol ve ilk çizimi manuel tetikle? Hayır, onload yapacak.
-        console.log("Canvas gösterildi, görsel yüklemesi bittiğinde oyun başlayacak.");
+        // Görsel yükleme kontrolü butonun aktifliğine bağlı, tekrar gerek yok.
+        if(startScreenDiv)startScreenDiv.style.display = 'none'; else throw new Error("startScreenDiv null!");
+        if(canvas)canvas.style.display = 'block'; else throw new Error("canvas null!");
+        tryStartGame(); // Oyunu başlat
     } catch (e) { console.error("startGame Hatası:", e); alert("Oyun başlatılamadı!"); }
 }
 
-// Ana Oyun Çizim Döngüsü
+// --- Ana Oyun Çizim Döngüsü ---
 function drawGame() {
-    try { if (!ctx) { console.warn("drawGame: CTX yok!"); return; }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    try { if (!ctx) { return; } ctx.clearRect(0, 0, canvas.width, canvas.height);
         // ARKA PLAN (Kontrollü)
         if (bgLoaded && bgImage.complete && bgImage.naturalWidth > 0) { ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height); }
-        else { ctx.fillStyle='#BBB';ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='red';ctx.font='20px Arial';ctx.textAlign='center'; ctx.fillText("ARKA PLAN HATASI/YÜKLENİYOR", canvas.width / 2, canvas.height / 2); ctx.textAlign='left'; return; } // Arka plan yoksa çizme
-
-        // LOGO (Kontrollü)
-        if (logoLoaded && logoImage.complete && logoImage.naturalWidth > 0) { logoX = canvas.width/2-logoWidth/2; const cX=logoX+logoWidth/2; const cY=logoY+logoHeight/2; const r=logoWidth/2; ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(cX,cY,r,0,Math.PI*2); ctx.fill(); ctx.drawImage(logoImage,logoX,logoY,logoWidth,logoHeight); }
-
+        else { ctx.fillStyle='#BBB';ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='red';ctx.font='20px Arial';ctx.textAlign='center'; ctx.fillText("ARKA PLAN HATASI/YÜKLENİYOR", canvas.width / 2, canvas.height / 2); ctx.textAlign='left'; } // Hata varsa bile diğerlerini çizmeye çalış
+        // LOGO
+        if (logoLoaded && logoImage.complete && logoImage.naturalWidth > 0) { logoX=canvas.width/2-logoWidth/2; const cX=logoX+logoWidth/2; const cY=logoY+logoHeight/2; const r=logoWidth/2; ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(cX,cY,r,0,Math.PI*2); ctx.fill(); ctx.drawImage(logoImage,logoX,logoY,logoWidth,logoHeight); }
         // Diğer Çizimler
-        let cTY=30; /* ... Kalan Haklar ... */ ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='left'; ctx.shadowColor='black';ctx.shadowBlur=3;ctx.shadowOffsetX=1;ctx.shadowOffsetY=1; ctx.fillText(`${texts[currentLang]?.attemptsLeft||'Attempts Left'}: ${3-failedAttemptsToday}`,20,cTY); cTY+=25; ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
+        let cTY=30; /* ... Kalan Haklar ... */ if(texts[currentLang]){ ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='left'; ctx.shadowColor='black';ctx.shadowBlur=3;ctx.shadowOffsetX=1;ctx.shadowOffsetY=1; ctx.fillText(`${texts[currentLang].attemptsLeft}: ${3-failedAttemptsToday}`,20,cTY); cTY+=25; ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0; }
 
-        if (gameState === 'TUTORIAL') { const iTS=clickableItems[tutorialStep]; if(iTS){ctx.strokeStyle=(Math.sin(Date.now()*0.005)>0)?'yellow':'orange';ctx.lineWidth=3;ctx.strokeRect(iTS.x-2,iTS.y-2,iTS.width+4,iTS.height+4); ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,canvas.height-60,canvas.width,60); ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='center'; let iAT=texts[currentLang]?.tutorialItemAction_Default||". Click."; /*...*/ ctx.fillText((texts[currentLang]?.tutorialItemIntro||"This:")+iTS.name+iAT,canvas.width/2,canvas.height-35); ctx.font='14px Arial'; ctx.fillText(texts[currentLang]?.tutorialItemPrompt||"Click area.",canvas.width/2,canvas.height-15); ctx.textAlign='left';} else {console.warn("Öğretici adımı geçersiz:", tutorialStep); gameState='PLAYING'; currentShuffledRecipe=shuffleArray(levels[currentLevelIndex]?.clicks||[]);}}
-        else if (gameState === 'PLAYING') { if(levels[currentLevelIndex]){ const d=levels[currentLevelIndex]; ctx.fillStyle = 'white'; ctx.textAlign = 'left'; ctx.shadowColor = 'black'; ctx.shadowBlur = 4; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2; ctx.font='bold 20px Arial'; ctx.fillText(`${texts[currentLang]?.level||'Lvl'}: ${d.level}`,20,cTY); cTY+=25; if(d.clicks.length>0){ctx.font='18px Arial'; ctx.fillText(`${texts[currentLang]?.order||'Order'}: ${d.recipeName}`,20,cTY); cTY+=25; ctx.font='italic 16px Arial'; ctx.fillText(`${texts[currentLang]?.requirements||'Required'}:`,20,cTY); cTY+=20; const sC=currentShuffledRecipe; for(const i of sC){ctx.fillText(`- ${i}`,30,cTY); cTY+=18;} cTY+=5;ctx.fillStyle = 'orange'; ctx.font = 'bold 14px Arial'; ctx.fillText(texts[currentLang]?.mixedOrderWarning||"Note: Prepare in order!",20,cTY); cTY+=20; if(d.clicks.includes('Fiyat Listesi')){ctx.fillStyle = 'lightblue';ctx.fillText(texts[currentLang]?.priceCheckWarning||"Price check!",20,cTY);cTY+=20;} } ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;} else { console.warn("Geçerli seviye yok:", currentLevelIndex); } if(feedbackMessage.text&&Date.now()<feedbackMessage.expiryTime){ctx.fillStyle=feedbackMessage.color;ctx.font='bold 28px Arial';ctx.textAlign='center';ctx.shadowColor='black';ctx.shadowBlur=5;ctx.shadowOffsetX=2;ctx.shadowOffsetY=2;ctx.fillText(feedbackMessage.text,canvas.width/2,canvas.height-30); ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;ctx.textAlign='left';}else{feedbackMessage.text='';}}
+        if (gameState === 'TUTORIAL') { const iTS=clickableItems[tutorialStep]; if(iTS){ /* ... Öğretici Vurgu ve Metin ... */ } else { console.warn("Öğretici adımı geçersiz:", tutorialStep); gameState='PLAYING'; currentShuffledRecipe=shuffleArray(levels[currentLevelIndex]?.clicks||[]);}}
+        else if (gameState === 'PLAYING') { if(levels[currentLevelIndex]){ const d=levels[currentLevelIndex]; /* ... Seviye, Sipariş, Karışık Gerekenler, Uyarılar ... */ } if(feedbackMessage.text&&Date.now()<feedbackMessage.expiryTime){/*... Feedback çizimi ...*/}else{feedbackMessage.text='';}}
+        // Hak Bitti / Oyun Bitti mesajları HTML overlay ile gösterilecek
 
         // Döngü
         if (gameLoopStarted && (gameState === 'PLAYING' || gameState === 'TUTORIAL')) { requestAnimationFrame(drawGame); }
@@ -110,35 +83,13 @@ function drawGame() {
 }
 
 // Tıklama İşleyici Fonksiyon
-function handleClick(event) { /* ... Önceki koddan kopyala (Tam hali) ... */ }
+function handleClick(event) { try{ if (messageOverlay?.style.display === 'flex') return; if (!canvas) return; const rect = canvas.getBoundingClientRect(); const clickX = event.offsetX; const clickY = event.offsetY; console.log(`handleClick - State: ${gameState}, Click: ${clickX},${clickY}`); if (gameState === 'TUTORIAL') { /* ... Öğretici ilerletme ... */ } else if (gameState === 'PLAYING') { /* ... Oyun tıklama mantığı ... */ } }catch(e){console.error("handleClick Hatası:",e);} }
 
-
-// --- GÖRSEL YÜKLEME OLAYLARI (KULLANICININ İSTEDİĞİ GİBİ - tryStartGame'i çağırır) ---
-bgImage.onload = function() {
-    console.log("BG Yüklendi (PNG)");
-    bgLoaded = true;
-    // Sadece iki resim de yüklendiyse oyunu başlatmayı DENE
-    if (logoLoaded) {
-        console.log("BG yüklendi, Logo zaten yüklüydü. Oyun başlatma deneniyor...");
-        // tryStartGameIfReady(); // Bu fonksiyonu kullanalım belki?
-        // VEYA doğrudan gameState'i ayarla? Hayır, başlatma butondan gelmeli.
-        // Sadece butonu kontrol etmesi için check'i çağır.
-         checkStartButtonState();
-    }
-};
-logoImage.onload = function() {
-    console.log("Logo Yüklendi");
-    logoLoaded = true;
-    // Sadece iki resim de yüklendiyse oyunu başlatmayı DENE
-    if (bgLoaded) {
-        console.log("Logo yüklendi, BG zaten yüklüydü. Oyun başlatma deneniyor...");
-        // tryStartGameIfReady();
-         checkStartButtonState(); // Buton durumu değişebilir
-    }
-};
-bgImage.onerror = () => { console.error("!!! Arka Plan YÜKLENEMEDİ! Yol: ./arka_plan.png"); bgLoaded = false; checkStartButtonState(); alert("Arka Plan PNG yüklenemedi!"); }
-logoImage.onerror = () => { console.error("!!! Logo YÜKLENEMEDİ!"); logoLoaded = false; checkStartButtonState(); alert("Logo yüklenemedi!"); }
-
+// --- GÖRSEL YÜKLEME OLAYLARI (KULLANICININ İSTEDİĞİ GİBİ) ---
+bgImage.onload = function() { console.log(">>> BG Yüklendi (PNG) <<<"); bgLoaded = true; if (logoLoaded) { assetsReady = true; checkStartButtonState(); }};
+logoImage.onload = function() { console.log(">>> Logo Yüklendi <<<"); logoLoaded = true; if (bgLoaded) { assetsReady = true; checkStartButtonState(); }};
+bgImage.onerror = () => { console.error("!!! Arka Plan YÜKLENEMEDİ! Yol: ./arka_plan.png"); bgLoaded = false; assetsReady = false; checkStartButtonState(); alert("Arka Plan PNG yüklenemedi!"); }
+logoImage.onerror = () => { console.error("!!! Logo YÜKLENEMEDİ!"); logoLoaded = false; assetsReady = false; checkStartButtonState(); alert("Logo yüklenemedi!"); }
 
 // --- Başlangıç Kodu (DOMContentLoaded) ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -146,15 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         // Element Referansları
         canvas = document.getElementById('gameCanvas'); ctx = canvas?.getContext('2d');
-        startScreenDiv=document.getElementById('startScreen'); gameTitleEl=document.getElementById('gameTitle'); /*...*/ startButton=document.getElementById('startButton'); gsmInput=document.getElementById('gsmInput'); kvkkCheck=document.getElementById('kvkkCheck'); /*...*/ messageOverlay=document.getElementById('messageOverlay'); /*...*/ closeButton=document.getElementById('closeButton');
-        if (!canvas||!ctx||!startScreenDiv||!startButton||!gsmInput||!kvkkCheck||!messageOverlay||!closeButton||/*!...tümü...*/) { throw new Error("Kritik HTML elementleri bulunamadı!"); }
+        startScreenDiv=document.getElementById('startScreen'); gameTitleEl=document.getElementById('gameTitle'); gameSloganEl=document.getElementById('gameSlogan'); langTRButton=document.getElementById('langTR'); langENButton=document.getElementById('langEN'); regionSelect=document.getElementById('regionSelect'); regionLabelEl=document.getElementById('regionLabel'); rewardTitleEl=document.getElementById('rewardTitle'); rewardListEl=document.getElementById('rewardList'); startButton=document.getElementById('startButton'); gsmInput=document.getElementById('gsmInput'); kvkkCheck=document.getElementById('kvkkCheck'); gsmError=document.getElementById('gsmError'); gsmLabel=document.getElementById('gsmLabel'); kvkkLabel=document.getElementById('kvkkLabel');
+        messageOverlay=document.getElementById('messageOverlay'); messageTitle=document.getElementById('messageTitle'); messageBody=document.getElementById('messageBody'); closeButton=document.getElementById('closeButton');
+        if (!canvas||!ctx||!startScreenDiv||!startButton||!gsmInput||!kvkkCheck||!messageOverlay||!closeButton||!langTRButton||!langENButton||!regionSelect||!rewardListEl) { throw new Error("Kritik HTML elementleri bulunamadı!"); }
         console.log("Tüm element referansları alındı.");
 
         // Olay Dinleyicileri
         langTRButton.addEventListener('click', () => { if(currentLang!=='TR'){currentLang='TR';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
         langENButton.addEventListener('click', () => { if(currentLang!=='EN'){currentLang='EN';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
         regionSelect.addEventListener('change', (event) => { currentRegion=event.target.value; localStorage.setItem('barista_region', currentRegion); updateTexts(currentLang, currentRegion); });
-        startButton.addEventListener('click', startGame); // startGame'i çağıracak
+        startButton.addEventListener('click', startGame);
         gsmInput.addEventListener('input', checkStartButtonState);
         kvkkCheck.addEventListener('change', checkStartButtonState);
         closeButton.addEventListener('click', hideMessage);
@@ -162,8 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tüm olay dinleyicileri eklendi.");
 
         // Başlangıç Ayarları
-        currentLang = localStorage.getItem('barista_lang') || 'TR'; currentRegion = localStorage.getItem('barista_region') || 'TR'; if(regionSelect) regionSelect.value = currentRegion; /*...*/
-        loadGameData(); updateTexts(currentLang, currentRegion); checkStartButtonState(); // Buton başta pasif olacak (assetsReady false)
+        currentLang = localStorage.getItem('barista_lang') || 'TR'; currentRegion = localStorage.getItem('barista_region') || 'TR'; if(regionSelect) regionSelect.value = currentRegion; if(langTRButton) langTRButton.classList.toggle('active', currentLang === 'TR'); if(langENButton) langENButton.classList.toggle('active', currentLang === 'EN');
+        loadGameData(); updateTexts(currentLang, currentRegion); checkStartButtonState(); // Buton başta pasif olacak
         console.log("Başlangıç ayarları yapıldı.");
 
         // Görsel yüklemelerini başlat
@@ -177,4 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
 console.log("script.js dosyası tamamen okundu.");
 
 // --- Tüm Fonksiyon Tanımları ---
-// (loadGameData, saveGameData, getRewardForLevel, showMessage, hideMessage, shuffleArray, updateTexts, checkStartButtonState, tryStartGame, startGame, drawGame, handleClick - TÜM BU FONKSİYONLARIN TAM İÇERİKLERİ BURADA OLMALI)
+// (Buraya loadGameData, saveGameData, ..., handleClick fonksiyonlarının TAMAMI gelmeli)
