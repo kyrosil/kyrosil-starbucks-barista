@@ -10,117 +10,136 @@ const logoImage = new Image();
 let bgLoaded = false;
 let logoLoaded = false;
 
-// Arka plan görseli yüklendiğinde çalışacak fonksiyon
-bgImage.onload = function() {
-    console.log("Arka plan GIF'i yüklendi.");
-    bgLoaded = true;
-    if (logoLoaded) startGameLoop();
-};
+// --- YENİ: localStorage ve Günlük Hak Takibi ---
+let failedAttemptsToday = 0;
+let lastPlayDate = '';
+let canPlay = true; // Oynayıp oynayamayacağını belirten bayrak
 
-// Logo görseli yüklendiğinde çalışacak fonksiyon
-logoImage.onload = function() {
-    console.log("Starbucks logosu yüklendi.");
-    logoLoaded = true;
-    if (bgLoaded) startGameLoop();
-};
+function loadGameData() {
+    const today = new Date().toISOString().split('T')[0]; // Bugünün tarihini YYYY-MM-DD formatında al
+    lastPlayDate = localStorage.getItem('barista_lastPlayDate') || today;
+    failedAttemptsToday = parseInt(localStorage.getItem('barista_failedAttempts') || '0', 10);
 
-// Görsel kaynaklarını belirtelim
+    // Eğer kaydedilen son tarih bugünden farklıysa, hakları sıfırla
+    if (lastPlayDate !== today) {
+        console.log("Yeni gün! Hata hakları sıfırlandı.");
+        failedAttemptsToday = 0;
+        lastPlayDate = today;
+        saveGameData(); // Sıfırlanmış veriyi kaydet
+    }
+
+    // Oynama hakkı kalmış mı kontrol et
+    if (failedAttemptsToday >= 3) {
+        canPlay = false;
+        console.warn("Bugünkü 3 hata hakkı doldu.");
+    } else {
+        canPlay = true;
+    }
+    console.log(`Bugünkü hata hakkı: ${3 - failedAttemptsToday} / 3`);
+}
+
+function saveGameData() {
+    localStorage.setItem('barista_lastPlayDate', lastPlayDate);
+    localStorage.setItem('barista_failedAttempts', failedAttemptsToday.toString());
+}
+// --- localStorage Bitiş ---
+
+
+// Oyun Durumu Değişkenleri
+let currentLevelIndex = 0;
+let currentRecipeStep = 0;
+
+// Seviye Tarifleri
+const levels = [
+    { level: 1, recipeName: "Sade Espresso", clicks: ['Espresso Machine Area'] },
+    { level: 2, recipeName: "Yeşil İçecek", clicks: ['Espresso Machine Area', 'Green Bottle'] },
+    { level: 3, recipeName: "Sadece Yeşil", clicks: ['Green Bottle'] },
+    // Buraya Seviye 4-10 eklenecek...
+    { level: 4, recipeName: "Oyun Bitti!", clicks: [] }
+];
+
+// Arka plan görseli yüklendiğinde
+bgImage.onload = function() { /* ... öncekiyle aynı ... */ console.log("BG yüklendi"); bgLoaded=true; if(logoLoaded) startGameLoop();};
+// Logo görseli yüklendiğinde
+logoImage.onload = function() { /* ... öncekiyle aynı ... */ console.log("Logo yüklendi"); logoLoaded=true; if(bgLoaded) startGameLoop();};
+
+// Görsel kaynakları
 bgImage.src = 'original.gif';
 logoImage.src = 'Starbucks_Corporation.png';
 
-// Logo boyutu ve konumu (Üstte Ortala)
-const logoWidth = 80;
-const logoHeight = 80;
-const logoX = canvas.width / 2 - logoWidth / 2;
-const logoY = 20; // Üstten boşluk (Yazılar için yer açtık)
+// Logo konumu ve boyutu
+const logoWidth = 80; const logoHeight = 80;
+const logoX = canvas.width / 2 - logoWidth / 2; const logoY = 20;
 
-// Tıklanabilir alanlar (Koordinatlar tahmini)
+// Tıklanabilir alanlar
 const clickableItems = [
     { name: 'Espresso Machine Area', x: 605, y: 300, width: 50, height: 60 },
     { name: 'Green Bottle', x: 300, y: 245, width: 30, height: 55 }
 ];
 
-// --- YENİ: Oyun Durumu Değişkenleri ---
-let currentLevelIndex = 0; // Başlangıç seviyesi (listenin 0. indeksi -> Seviye 1)
-let currentRecipeStep = 0; // Mevcut tarifteki ilerleme (kaçıncı tıklama)
-// let score = 0; // Puanı şimdilik eklemiyoruz
-
-// --- YENİ: Seviye Tarifleri ---
-const levels = [
-    // Gerçek Seviye 1 (Index 0)
-    { level: 1, recipeName: "Sade Espresso", clicks: ['Espresso Machine Area'] },
-    // Gerçek Seviye 2 (Index 1) - İlk Ödül Seviyesi!
-    { level: 2, recipeName: "Yeşil İçecek", clicks: ['Espresso Machine Area', 'Green Bottle'] },
-    // Gerçek Seviye 3 (Index 2) - Örnek
-    { level: 3, recipeName: "Sadece Yeşil", clicks: ['Green Bottle'] },
-    // Buraya Seviye 4, 5, 6, 7, 8, 9, 10 tarifleri eklenecek...
-    // Şimdilik oyun 3. seviyeden sonra bitsin diye placeholder:
-    { level: 4, recipeName: "Oyun Bitti!", clicks: [] } // Oyun sonu işaretçisi
-];
-// ---------------------------------
-
 // Ana oyun döngüsü fonksiyonu
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Arka planı çiz
     if (bgLoaded) ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
-    // Logoyu ve arkasındaki daireyi çiz
-    if (logoLoaded) {
-        const circleCenterX = logoX + logoWidth / 2;
-        const circleCenterY = logoY + logoHeight / 2;
-        const radius = logoWidth / 2;
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(circleCenterX, circleCenterY, radius, 0, Math.PI * 2);
-        ctx.fill();
+    // Logo ve daire çizimi... (öncekiyle aynı)
+    if (logoLoaded) { /* ... logo ve daire çizim kodu ... */
+        const circleCenterX = logoX + logoWidth / 2; const circleCenterY = logoY + logoHeight / 2;
+        const radius = logoWidth / 2; ctx.fillStyle = 'white'; ctx.beginPath();
+        ctx.arc(circleCenterX, circleCenterY, radius, 0, Math.PI * 2); ctx.fill();
         ctx.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
-    }
+     }
 
-    // --- YENİ: Seviye ve Sipariş Bilgisini Yazdır ---
-    if (levels[currentLevelIndex]) {
+    // Seviye ve Sipariş Bilgisi Yazdırma... (öncekiyle aynı, sadece gölge ayarı düzeltildi)
+     if (levels[currentLevelIndex]) {
         const currentLevelData = levels[currentLevelIndex];
-        ctx.fillStyle = 'white'; // Yazı rengi
-        ctx.font = 'bold 24px Arial'; // Yazı tipi ve boyutu
-        ctx.textAlign = 'center'; // Yazıyı ortala
-        // Okunabilirlik için hafif gölge ekleyelim
+        ctx.fillStyle = 'white'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center';
         ctx.shadowColor = 'black'; ctx.shadowBlur = 4; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
-
-        // Seviye Numarası
-        ctx.fillText(`Seviye: ${currentLevelData.level}`, canvas.width / 2, 130); // Logonun biraz altına
-
-        // Sipariş Adı (Tarif Adı)
-        if (currentLevelData.clicks.length > 0) { // Oyun bitmediyse tarifi yaz
-             ctx.font = '20px Arial'; // Sipariş için biraz daha küçük font
-             ctx.fillText(`Sipariş: ${currentLevelData.recipeName}`, canvas.width / 2, 165); // Seviyenin altına
-        } else { // Oyun bittiyse
-             ctx.font = 'bold 28px Arial';
-             ctx.fillText(currentLevelData.recipeName, canvas.width / 2, 165); // Oyun Bitti mesajı
-        }
-
-
-        // Gölgeyi sıfırla (diğer çizimleri etkilemesin)
+        ctx.fillText(`Seviye: ${currentLevelData.level}`, canvas.width / 2, 130);
+        if (currentLevelData.clicks.length > 0) {
+             ctx.font = '20px Arial';
+             ctx.fillText(`Sipariş: ${currentLevelData.recipeName}`, canvas.width / 2, 165);
+        } else { ctx.font = 'bold 28px Arial'; ctx.fillText(currentLevelData.recipeName, canvas.width / 2, 165); }
         ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+     }
 
-        // İpucu: Mevcut adımda hangi öğenin tıklanması gerektiğini gösterebiliriz (İleride)
-        // Örn: if(currentRecipeStep < currentLevelData.clicks.length) { /* ilgili öğeyi vurgula */ }
-    }
-     // --- YENİ KISIM SONU ---
+     // --- YENİ: Hakkı Bitti Mesajı ---
+     if (!canPlay) {
+         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Yarı saydam siyah arka plan
+         ctx.fillRect(0, canvas.height / 2 - 40, canvas.width, 80); // Ortada bir bant
+         ctx.fillStyle = 'red';
+         ctx.font = 'bold 30px Arial';
+         ctx.textAlign = 'center';
+         ctx.fillText("Bugünkü Hata Hakkın Doldu!", canvas.width / 2, canvas.height / 2);
+         ctx.fillStyle = 'white';
+         ctx.font = '18px Arial';
+         ctx.fillText("Yarın tekrar dene!", canvas.width / 2, canvas.height / 2 + 30);
+     }
+     // --- Mesaj Sonu ---
 
-    // --- DEBUG ÇİZİMİ (İsteğe Bağlı) ---
-    /*
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)'; ctx.lineWidth = 2;
-    for (const item of clickableItems) { ctx.strokeRect(item.x, item.y, item.width, item.height); }
-    */
-    // --- DEBUG SONU ---
+    // DEBUG Çizimi (Yorumlu) ...
+    /* ... debug kodu ... */
 
     requestAnimationFrame(drawGame);
 }
 
-// Oyun döngüsünü başlatan fonksiyon
+// Oyun döngüsünü başlatan fonksiyon (GÜNCELLENDİ)
 let gameLoopStarted = false;
 function startGameLoop() {
+    // Oyunu başlatmadan önce localStorage'dan veriyi yükle ve kontrol et
+    loadGameData();
+
+    if (!canPlay) {
+         // Eğer oynama hakkı yoksa, oyun döngüsünü başlatma ama çizim yapsın (mesajı göstermek için)
+         if (!gameLoopStarted) { // Sadece bir kez çizelim
+             gameLoopStarted = true; // Döngü başlamadı ama tekrar çizmemek için işaretle
+             drawGame(); // Mesajı çizmek için bir kez çağır
+             console.log("Oynama hakkı yok, oyun başlatılmadı ama mesaj gösteriliyor.");
+         }
+         return; // Oynama hakkı yoksa fonksiyondan çık
+    }
+
+    // Oynama hakkı varsa ve döngü başlamadıysa başlat
     if (!gameLoopStarted) {
         console.log("Oyun döngüsü başlatılıyor...");
         gameLoopStarted = true;
@@ -128,77 +147,71 @@ function startGameLoop() {
     }
 }
 
-// Tıklama İşleyici Fonksiyon (GÜNCELLENMİŞ)
+// Tıklama İşleyici Fonksiyon (GÜNCELLENDİ)
 function handleClick(event) {
+    // Eğer oynama hakkı yoksa veya oyun bittiyse tıklamaları işleme
+    if (!canPlay || currentLevelIndex >= levels.length - 1) return;
+
     const rect = canvas.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
-    // Oyun bitmişse tıklamaları dikkate alma
-    if (currentLevelIndex >= levels.length - 1) return;
-
     let clickedItemName = null;
-    for (const item of clickableItems) {
-        if (clickX >= item.x && clickX <= item.x + item.width &&
-            clickY >= item.y && clickY <= item.y + item.height) {
-            clickedItemName = item.name;
-            break;
-        }
+    for (const item of clickableItems) { /* ... öğe bulma kodu aynı ... */
+        if (clickX >= item.x && clickX <= item.x + item.width && clickY >= item.y && clickY <= item.y + item.height) {
+            clickedItemName = item.name; break; }
     }
 
     if (clickedItemName) {
         console.log(`Tıklandı: ${clickedItemName}`);
-
-        // Mevcut seviye için oyun mantığını kontrol et
         const currentLevelData = levels[currentLevelIndex];
         const expectedClick = currentLevelData.clicks[currentRecipeStep];
 
-        if (clickedItemName === expectedClick) {
+        if (clickedItemName === expectedClick) { // DOĞRU TIKLAMA
             console.log("Doğru adım!");
-            currentRecipeStep++; // Sonraki adıma geç
-
-            // Tarif tamamlandı mı?
-            if (currentRecipeStep >= currentLevelData.clicks.length) {
+            currentRecipeStep++;
+            if (currentRecipeStep >= currentLevelData.clicks.length) { // Seviye Bitti
                 const completedLevel = currentLevelData.level;
                 console.log(`--- Seviye ${completedLevel} Bitti! ---`);
-                currentLevelIndex++; // Sonraki seviyeye geç
-                currentRecipeStep = 0; // Adım sayacını sıfırla
-
-                // Ödül seviyesi mi kontrol et (2, 4, 6, 8, 10)
-                if ([2, 4, 6, 8, 10].includes(completedLevel)) {
-                    // ŞİMDİLİK SADECE KONSOLA YAZALIM
+                currentLevelIndex++;
+                currentRecipeStep = 0;
+                if ([2, 4, 6, 8, 10].includes(completedLevel)) { // Ödül Kontrolü
                     console.warn(`%cÖDÜL KAZANILDI! Seviye ${completedLevel} tamamlandı! Mail atmayı unutma!`, 'color: green; font-weight: bold;');
-                    // BURAYA KAZANMA MESAJINI CANVAS'A ÇİZEN KOD GELECEK
-                    // VEYA BASİT BİR ALERT:
-                    // alert(`Tebrikler! Seviye ${completedLevel} ödülünü kazandın! (${completedLevel === 2 ? (REGION === 'TR' ? '200TL' : '$5') : 'Daha büyük ödül!'})\nEkran görüntüsünü giveaways@kyrosil.eu adresine gönder!`);
-                    // Not: REGION değişkeni ve ödül miktarını daha sonra ekleyeceğiz.
+                    // BURAYA CANVAS'A ÖDÜL MESAJI ÇİZME KODU EKLENECEK
                 }
-
-                // Oyun bitti mi kontrol et
                 const nextLevelData = levels[currentLevelIndex];
-                if (nextLevelData.clicks.length === 0) { // Bir sonraki seviyenin tarifi boşsa oyun bitmiştir
+                if (nextLevelData.clicks.length === 0) { // Oyun Bitti Kontrolü
                      console.log("OYUN TAMAMLANDI! TEBRİKLER!");
-                     // Oyun bittiğinde özel bir şey yapabiliriz. Şimdilik döngü duracak.
+                     canPlay = false; // Oyun bitince de oynamayı durdurabiliriz
                 }
             }
-        } else {
+        } else { // YANLIŞ TIKLAMA
             console.log("Yanlış malzeme veya sıra! Bu tarif için baştan başla.");
-            // Yanlış tıklamada mevcut adımı sıfırla, oyuncu tarife baştan başlasın
-            currentRecipeStep = 0;
-            // İstersen burada bir ses efekti veya görsel hata mesajı da gösterebiliriz
-        }
+            currentRecipeStep = 0; // Adımı sıfırla
 
+            // --- YENİ: Hata Hakkını Azalt ---
+            failedAttemptsToday++; // Hata sayacını artır
+            saveGameData(); // Yeni sayacı kaydet
+            console.log(`Kalan hata hakkı: ${3 - failedAttemptsToday} / 3`);
+            // --- Hata Hakkı Azaltma Sonu ---
+
+            // --- YENİ: Hak Bitti Kontrolü ---
+            if (failedAttemptsToday >= 3) {
+                canPlay = false; // Oynama hakkı bitti
+                console.error("Bugünkü 3 hata hakkı doldu! Oyun durduruldu.");
+                // Ekrana mesaj zaten drawGame içinde çizilecek
+            }
+            // --- Hak Bitti Kontrolü Sonu ---
+
+            // BURAYA CANVAS'A "HATA!" MESAJI ÇİZME KODU EKLENECEK
+        }
     } else {
-         console.log("Boş alan tıklandı."); // Boş alan tıklaması
+         console.log("Boş alan tıklandı.");
     }
 }
 
-// Canvas elementine 'click' olay dinleyicisini ekle
+// Olay dinleyicisi... (öncekiyle aynı)
 canvas.addEventListener('click', handleClick);
-
-
 // Hata logları... (öncekiyle aynı)
-bgImage.onerror = () => { console.error("Arka plan GIF'i yüklenemedi! Dosya adı veya yolu doğru mu?"); };
-logoImage.onerror = () => { console.error("Starbucks logosu yüklenemedi! Dosya adı veya yolu doğru mu?"); };
-
+bgImage.onerror = /* ... */ ; logoImage.onerror = /* ... */ ;
 console.log("script.js yüklendi, görseller yükleniyor...");
