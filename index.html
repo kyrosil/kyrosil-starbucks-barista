@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyrosil Starbucks Barista</title> <link rel="stylesheet" href="style.css">
+    <title>Kyrosil Starbucks Barista</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="startScreen">
@@ -13,19 +14,20 @@
              <div class="language-select"> <button id="langTR" class="active">TR</button> <button id="langEN">EN</button> </div>
              <div class="region-select"> <label for="regionSelect" id="regionLabel"></label> <select id="regionSelect"><option value="TR">Türkiye (TL)</option><option value="EU">Europe/USA (USD)</option></select> </div>
         </div>
-        <div class="rewards-info">
-             <h3 id="rewardTitle"></h3>
-             <ul id="rewardList"></ul> </div>
+        <div class="rewards-info"> <h3 id="rewardTitle"></h3> <ul id="rewardList"></ul> </div>
         <div class="gsm-input">
             <label for="gsmInput" id="gsmLabel"></label>
-            <input type="tel" id="gsmInput" name="gsmInput" placeholder="" inputmode="numeric" autocomplete="off"> <div class="kvkk-consent">
+            <input type="tel" id="gsmInput" name="gsmInput" placeholder="" inputmode="numeric" autocomplete="off">
+            <div class="kvkk-consent">
                  <input type="checkbox" id="kvkkCheck" name="kvkkCheck">
-                 <label for="kvkkCheck" id="kvkkLabel"></label> </div>
-             <p id="gsmError" class="error-message" style="display: none;"></p> </div>
-        <button id="startButton" disabled></button> </div>
+                 <label for="kvkkCheck" id="kvkkLabel"></label>
+             </div>
+             <p id="gsmError" class="error-message" style="display: none;"></p>
+        </div>
+        <button id="startButton" disabled></button>
+    </div>
     <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
     <div id="messageOverlay" class="overlay" style="display: none;"> <div class="message-box"><h2 id="messageTitle">...</h2><div id="messageBody">...</div><button id="closeButton">Tamam</button></div> </div>
-
     <script src="script.js"></script>
 </body>
 </html>
