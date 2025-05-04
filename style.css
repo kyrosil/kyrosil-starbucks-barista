@@ -1,6 +1,231 @@
-body{margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;background-color:#f0f0f0;font-family:Arial,sans-serif}#startScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background-color:white;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.1);text-align:center;max-width:600px;width:90%} .logo-container{margin-bottom:15px}.logo{max-height:50px;margin:0 10px}#gameTitle{color:#006241;margin-bottom:8px;font-size:1.8em}#gameSlogan{color:#555;margin-bottom:20px;font-style:italic;font-size:0.9em;max-width:90%;line-height:1.4}.settings{display:flex;justify-content:center;align-items:center;margin-bottom:20px;gap:25px;flex-wrap:wrap}.language-select button{padding:6px 12px;margin:0 3px;cursor:pointer;border:1px solid #ccc;background-color:#eee;border-radius:5px;font-size:0.9em}.language-select button.active{background-color:#006241;color:white;border-color:#006241}.region-select label{margin-right:5px;color:#555;font-size:0.9em}.region-select select{padding:6px;border-radius:5px;border:1px solid #ccc;font-size:0.9em}
-.rewards-info{margin-bottom:20px;padding:10px 15px;background-color:#f8f8f8;border-radius:8px;width:90%;max-width:400px}.rewards-info h3{margin-top:0;color:#333;margin-bottom:10px;font-size:1em;border-bottom:1px solid #eee;padding-bottom:5px}#rewardList{list-style:none;padding:0;margin:0;font-size:0.85em;color:#666;text-align:left}#rewardList li{margin-bottom:5px}#rewardList strong{color:#006241;margin-right:5px;display:inline-block;width:70px}#rewardList span{font-weight:bold;color:#333}#rewardList .prize-type{font-size:0.9em;color:#888;margin-left:5px}
-.gsm-input{margin-bottom:20px;width:80%;max-width:350px}.gsm-input label[for="gsmInput"]{display:block;margin-bottom:5px;font-weight:bold;font-size:0.9em;color:#333}#gsmInput{width:calc(100% - 22px);padding:10px;border:1px solid #ccc;border-radius:5px;font-size:1em;margin-bottom:10px}.kvkk-consent{display:flex;align-items:center;justify-content:center;margin-bottom:5px}#kvkkCheck{margin-right:8px;width:15px;height:15px;cursor:pointer}.kvkk-consent label{font-size:0.8em;color:#666;cursor:pointer}.error-message{color:red;font-size:0.8em;margin-top:5px;min-height:1em}
-#startButton{padding:12px 35px;font-size:1.1em;font-weight:bold;cursor:pointer;border:none;border-radius:8px;background-color:#00754a;color:white;transition:background-color 0.2s ease}#startButton:hover{background-color:#006241}#startButton:disabled{background-color:#cccccc;cursor:not-allowed}
-#gameCanvas{border:1px solid black;display:none}
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:1000}.message-box{background-color:white;padding:30px 40px;border-radius:10px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.3);max-width:80%}.message-box h2{margin-top:0;color:#333}.message-box #messageBody{margin-bottom:20px;line-height:1.6;color:#555}.message-box #messageBody a{color:#007bff;text-decoration:none;font-weight:bold}.message-box #messageBody a:hover{text-decoration:underline}.message-box button{padding:10px 25px;font-size:16px;cursor:pointer;border:none;border-radius:5px;background-color:#007bff;color:white;transition:background-color 0.2s ease}.message-box button:hover{background-color:#0056b3}
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* --- Genel Sayfa Stilleri --- */
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Tam yükseklik */
+    background-color: #f4f4f4; /* Daha açık bir gri */
+    font-family: 'Poppins', Arial, sans-serif; /* Yeni font */
+    color: #333; /* Varsayılan metin rengi */
+}
+
+/* --- Giriş Ekranı --- */
+#startScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 40px; /* İç boşluk artırıldı */
+    background-color: white;
+    border-radius: 20px; /* Daha yuvarlak köşeler */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12); /* Daha belirgin gölge */
+    text-align: center;
+    max-width: 550px; /* Biraz daraltıldı */
+    width: 90%;
+    border: 1px solid #eee; /* İnce bir kenarlık */
+}
+
+/* Logolar */
+.logo-container {
+    margin-bottom: 20px;
+}
+.logo {
+    max-height: 55px; /* Biraz küçültüldü */
+    margin: 0 15px;
+    vertical-align: middle; /* Dikey hizalama */
+}
+
+/* Başlık ve Slogan */
+#gameTitle {
+    color: #006241; /* Starbucks yeşili */
+    margin-bottom: 10px;
+    font-size: 2em; /* Biraz büyütüldü */
+    font-weight: 700;
+}
+#gameSlogan {
+    color: #666; /* Biraz daha koyu gri */
+    margin-bottom: 25px;
+    font-size: 1em;
+    max-width: 90%;
+    line-height: 1.5;
+}
+
+/* Ayarlar (Dil ve Bölge) */
+.settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 20px; /* Biraz azaltıldı */
+    flex-wrap: wrap;
+}
+.language-select button {
+    padding: 8px 16px;
+    margin: 0 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.language-select button:hover {
+    background-color: #eee;
+    border-color: #ccc;
+}
+.language-select button.active {
+    background-color: #006241;
+    color: white;
+    border-color: #005034; /* Biraz daha koyu */
+}
+.region-select label {
+    margin-right: 8px;
+    color: #555;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+.region-select select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 0.9em;
+    background-color: white;
+}
+
+/* Ödül Bilgisi Alanı */
+.rewards-info {
+    margin-bottom: 25px;
+    padding: 15px 20px;
+    background-color: #f0f9f4; /* Çok açık yeşilimsi */
+    border-radius: 10px;
+    width: 90%;
+    max-width: 450px;
+    border: 1px solid #d4e9d9;
+}
+.rewards-info h3 {
+    margin-top: 0;
+    color: #006241;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-bottom: 1px solid #c1dac9;
+    padding-bottom: 8px;
+}
+#rewardList { list-style: none; padding: 0; margin: 0; font-size: 0.9em; color: #333; text-align: left; }
+#rewardList li { margin-bottom: 6px; display: flex; justify-content: space-between; }
+#rewardList strong { color: #005034; font-weight: 600; flex-basis: 70px; /* Sabit genişlik */ text-align: right; margin-right: 10px; }
+#rewardList span { font-weight: 600; color: #111; flex-grow: 1; text-align: left; }
+#rewardList .prize-type { font-size: 0.9em; color: #555; margin-left: 8px; font-weight: 400; white-space: nowrap; }
+
+/* GSM Giriş Alanı */
+.gsm-input { margin-bottom: 20px; width: 90%; max-width: 380px; }
+.gsm-input label[for="gsmInput"] { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95em; color: #333; }
+#gsmInput { width: calc(100% - 24px); padding: 11px; border: 1px solid #ccc; border-radius: 6px; font-size: 1em; margin-bottom: 12px; transition: border-color 0.2s ease; }
+#gsmInput:focus { border-color: #006241; outline: none; }
+.kvkk-consent { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+#kvkkCheck { margin-right: 8px; width: 16px; height: 16px; cursor: pointer; accent-color: #006241; /* Checkbox rengi */ }
+.kvkk-consent label { font-size: 0.85em; color: #555; cursor: pointer; line-height: 1.4; }
+.error-message { color: #dc3545; /* Kırmızı */ font-size: 0.85em; margin-top: 6px; min-height: 1em; font-weight: 600; }
+
+/* Başlat Butonu */
+#startButton { padding: 14px 45px; font-size: 1.2em; font-weight: 700; cursor: pointer; border: none; border-radius: 8px; background-color: #00754a; color: white; transition: background-color 0.2s ease, transform 0.1s ease; }
+#startButton:hover:not(:disabled) { background-color: #006241; transform: translateY(-1px); }
+#startButton:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
+
+/* Oyun Alanı (Başlangıçta Gizli) */
+#gameCanvas { border: 1px solid #ccc; /* Daha yumuşak kenarlık */ display: none; max-width: 100%; /* Mobil için */ height: auto; /* Mobil için */ }
+
+/* Mesaj Kutusu (Overlay) */
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:1000; padding: 15px;}
+.message-box{background-color:white;padding:30px 40px;border-radius:15px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.3);max-width:90%; width: 450px; /* Sabit genişlik deneyelim */}
+.message-box h2{margin-top:0;color:#333; font-weight: 700;}
+.message-box #messageBody{margin-bottom:25px;line-height:1.6;color:#555;font-size: 1.05em;}
+.message-box #messageBody a{color:#006241;text-decoration:underline;font-weight:600;}
+.message-box #messageBody a:hover{color:#004d34;}
+.message-box button{padding:12px 30px;font-size:1em; font-weight: 600; cursor:pointer;border:none;border-radius:8px;background-color:#00754a;color:white;transition:background-color 0.2s ease;}
+.message-box button:hover{background-color:#006241;}
+
+/* --- Mobil Uyumluluk (Responsive Tasarım) --- */
+@media (max-width: 600px) {
+    #startScreen {
+        padding: 20px 15px; /* Daha az yan boşluk */
+        width: 95%;
+        max-width: 95%;
+    }
+    .logo {
+        max-height: 45px; /* Logolar küçülsün */
+    }
+    #gameTitle {
+        font-size: 1.6em; /* Başlık küçülsün */
+    }
+    #gameSlogan {
+        font-size: 0.85em; /* Slogan küçülsün */
+        margin-bottom: 20px;
+    }
+    .settings {
+        gap: 15px; /* Ayar araları azalsın */
+        margin-bottom: 20px;
+    }
+    .language-select button {
+        padding: 5px 10px;
+        font-size: 0.8em;
+    }
+    .region-select select {
+        padding: 5px 8px;
+        font-size: 0.8em;
+    }
+    .rewards-info {
+        width: 95%;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    .rewards-info h3 {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+    #rewardList {
+        font-size: 0.8em;
+    }
+     #rewardList strong {
+        width: 60px; /* Seviye kısmı daralsın */
+    }
+    .gsm-input {
+         width: 95%;
+         margin-bottom: 15px;
+    }
+    #gsmInput {
+        padding: 9px;
+        font-size: 0.95em;
+    }
+    .kvkk-consent label {
+        font-size: 0.75em; /* KVKK yazısı küçülsün */
+    }
+    #startButton {
+        padding: 12px 30px;
+        font-size: 1em;
+    }
+     .message-box {
+        width: 85%;
+        padding: 25px 20px;
+    }
+     .message-box h2 {
+        font-size: 1.3em;
+    }
+    .message-box #messageBody{
+        font-size: 0.95em;
+    }
+    .message-box button {
+        padding: 10px 25px;
+        font-size: 0.9em;
+    }
+
+    /* Canvas mobil için (Örnek - Boyutları JS ayarlar ama max-width önemli) */
+    /* #gameCanvas { max-width: 100%; height: auto; } */
+    /* Canvas boyutunu JS içinden ayarlamak daha iyi olabilir */
+}
