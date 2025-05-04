@@ -180,40 +180,44 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tüm element referansları alındı.");
 
         // Olay Dinleyicileri
-        langTRButton.addEventListener('click', () => { if(currentLang!=='TR'){currentLang='TR';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
-        langENButton.addEventListener('click', () => { if(currentLang!=='EN'){currentLang='EN';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
-        regionSelect.addEventListener('change', (event) => { currentRegion=event.target.value; localStorage.setItem('barista_region', currentRegion); updateTexts(currentLang, currentRegion); });
-        startButton.addEventListener('click', startGame);
-        gsmInput.addEventListener('input', checkStartButtonState);
-        kvkkCheck.addEventListener('change', checkStartButtonState);
-        closeButton.addEventListener('click', hideMessage);
-        canvas.addEventListener('click', handleClick);
+langTRButton.addEventListener('click', () => { if(currentLang!=='TR'){currentLang='TR';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
+langENButton.addEventListener('click', () => { if(currentLang!=='EN'){currentLang='EN';localStorage.setItem('barista_lang', currentLang);updateTexts(currentLang, currentRegion);}});
+regionSelect.addEventListener('change', (event) => { currentRegion=event.target.value; localStorage.setItem('barista_region', currentRegion); updateTexts(currentLang, currentRegion); });
+startButton.addEventListener('click', startGame);
+gsmInput.addEventListener('input', checkStartButtonState);
+kvkkCheck.addEventListener('change', checkStartButtonState);
+closeButton.addEventListener('click', hideMessage);
+canvas.addEventListener('click', handleClick);
 
-        // Mobil dokunma desteği için touchstart olayı
-        canvas.addEventListener('touchstart', (event) => {
-            event.preventDefault(); // Varsayılan dokunma davranışını engelle (ör. sayfa kaydırma)
-            try {
-                if (messageOverlay?.style.display === 'flex') return; // Mesaj açıkken dokunmayı yoksay
-                if (!canvas) return;
+// Mobil dokunma desteği için touchstart olayı
+canvas.addEventListener('touchstart', (event) => {
+    event.preventDefault(); // Varsayılan dokunma davranışını engelle
+    try {
+        if (messageOverlay?.style.display === 'flex') return; // Mesaj açıkken dokunmayı yoksay
+        if (!canvas) return;
 
-                const rect = canvas.getBoundingClientRect();
-                const touch = event.touches[0]; // İlk dokunmayı al
-                const clickX = touch.clientX - rect.left; // Canvas içindeki X koordinatı
-                const clickY = touch.clientY - rect.top;  // Canvas içindeki Y koordinatı
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0]; // İlk dokunmayı al
 
-                console.log(`handleTouch - State: ${gameState}, Touch: ${clickX},${clickY}`);
+        // Canvas'in gerçek boyutlarına göre ölçeklendirilmiş koordinatlar
+        const scaleX = canvas.width / rect.width; // CSS genişliğine göre ölçek
+        const scaleY = canvas.height / rect.height; // CSS yüksekliğine göre ölçek
+        const clickX = (touch.clientX - rect.left) * scaleX; // Ölçeklendirilmiş X
+        const clickY = (touch.clientY - rect.top) * scaleY;  // Ölçeklendirilmiş Y
 
-                // Mevcut handleClick fonksiyonunu çağır, sentetik bir olay nesnesi oluştur
-                const syntheticEvent = {
-                    offsetX: clickX,
-                    offsetY: clickY,
-                    preventDefault: () => {} // Gerekirse boş bir preventDefault
-                };
-                handleClick(syntheticEvent);
-            } catch (e) {
-                console.error("handleTouch Hatası:", e);
-            }
-        }, { passive: false }); // passive: false ile preventDefault'ı etkinleştir
+        console.log(`handleTouch - State: ${gameState}, Touch: ${clickX},${clickY}, Canvas: ${canvas.width}x${canvas.height}, Rect: ${rect.width}x${rect.height}`);
+
+        // Mevcut handleClick fonksiyonunu çağır, sentetik bir olay nesnesi oluştur
+        const syntheticEvent = {
+            offsetX: clickX,
+            offsetY: clickY,
+            preventDefault: () => {}
+        };
+        handleClick(syntheticEvent);
+    } catch (e) {
+        console.error("handleTouch Hatası:", e);
+    }
+}, { passive: false }); // passive: false ile preventDefault'ı etkinleştir
 
         console.log("Tüm olay dinleyicileri eklendi.");
 
