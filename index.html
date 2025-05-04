@@ -13,40 +13,20 @@
             <img src="indir.png" alt="Kyrosil Logo" class="logo">
             <img src="Starbucks_Corporation.png" alt="Starbucks Logo" class="logo">
         </div>
-        <h1 id="gameTitle">Oyun Adı</h1>
-        <p id="gameSlogan">Oyun sloganı buraya gelecek.</p>
-
-        <div class="settings">
-            <div class="language-select">
-                <button id="langTR" class="active">TR</button>
-                <button id="langEN">EN</button>
-            </div>
-            <div class="region-select">
-                <label for="regionSelect" id="regionLabel">Bölge:</label>
-                <select id="regionSelect">
-                    <option value="TR">Türkiye (TL)</option>
-                    <option value="EU">Europe (USD/EUR)</option>
-                    </select>
-            </div>
+        <h1 id="gameTitle"></h1> <p id="gameSlogan"></p> <div class="settings">
+             <div class="language-select"> <button id="langTR" class="active">TR</button> <button id="langEN">EN</button> </div>
+             <div class="region-select"> <label for="regionSelect" id="regionLabel"></label> <select id="regionSelect"><option value="TR">Türkiye (TL)</option><option value="EU">Europe (USD/EUR)</option></select> </div>
         </div>
 
-        <div class="rewards-info">
-            <h3 id="rewardTitle">Ödüller</h3>
-            <p id="rewardSummary">Seviye 2/4/6/8'de Starbucks App Ödülleri, Seviye 10'da 500 USDT!</p>
-            </div>
-
-        <button id="startButton">Başla</button>
-
-    </div>
+        <div class="rewards-info"> <h3 id="rewardTitle"></h3> <p id="rewardSummary"></p> </div> <div class="gsm-input">
+            <label for="gsmInput" id="gsmLabel"></label> <input type="tel" id="gsmInput" name="gsmInput" placeholder="05xxxxxxxxx" pattern="[0-9]*" inputmode="numeric" autocomplete="off" minlength="10" maxlength="11"> <div class="kvkk-consent">
+                 <input type="checkbox" id="kvkkCheck" name="kvkkCheck">
+                 <label for="kvkkCheck" id="kvkkLabel"></label> </div>
+             <p id="gsmError" class="error-message" style="display: none;"></p> </div>
+        <button id="startButton" disabled></button> </div>
     <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+    <div id="messageOverlay" class="overlay" style="display: none;"> /* ... Mesaj Kutusu HTML'i aynı ... */ <div class="message-box"><h2 id="messageTitle">...</h2><div id="messageBody">...</div><button id="closeButton">Tamam</button></div> </div>
 
-    <div id="messageOverlay" class="overlay" style="display: none;">
-        <div class="message-box">
-            <h2 id="messageTitle">Mesaj Başlığı</h2>
-            <div id="messageBody">Mesaj içeriği buraya gelecek...</div>
-            <button id="closeButton">Tamam</button>
-        </div>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>
