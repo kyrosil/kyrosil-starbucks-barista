@@ -34,9 +34,9 @@ logoImage.onload = function() {
 bgImage.src = 'original.gif';
 logoImage.src = 'Starbucks_Corporation.png';
 
-// Logo yerleşimi için YENİ tahmini koordinatlar ve boyut (Deneme 2)
-const logoX = 110; // Biraz sağa aldık
-const logoY = 80;  // Biraz aşağı aldık
+// Logo yerleşimi için YENİ tahmini koordinatlar ve boyut (Deneme 3)
+const logoX = 125; // Biraz daha sağa aldık
+const logoY = 95;  // Biraz daha aşağı aldık
 const logoWidth = 60; // Boyut aynı kalsın şimdilik
 const logoHeight = 60; // Boyut aynı kalsın şimdilik
 
