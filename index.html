@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyrosil Starbucks Barista</title> <link rel="stylesheet" href="style.css">
+    <title>Kyrosil Starbucks Barista</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="startScreen">
         <div class="logo-container"> <img src="indir.png" alt="Kyrosil Logo" class="logo"> <img src="Starbucks_Corporation.png" alt="Starbucks Logo" class="logo"> </div>
-        <h1 id="gameTitle"></h1>
-        <p id="gameSlogan"></p>
+        <h1 id="gameTitle"></h1> <p id="gameSlogan"></p>
         <div class="settings">
              <div class="language-select"> <button id="langTR" class="active">TR</button> <button id="langEN">EN</button> </div>
              <div class="region-select"> <label for="regionSelect" id="regionLabel"></label> <select id="regionSelect"><option value="TR">Türkiye (TL)</option><option value="EU">Europe/USA (USD)</option></select> </div>
         </div>
-        <div class="rewards-info"> <h3 id="rewardTitle"></h3> <div id="rewardList"></div> </div> <div class="gsm-input">
+        <div class="rewards-info">
+             <h3 id="rewardTitle"></h3>
+             <ul id="rewardList"></ul> </div>
+        <div class="gsm-input">
             <label for="gsmInput" id="gsmLabel"></label>
             <input type="tel" id="gsmInput" name="gsmInput" placeholder="05xxxxxxxxx" inputmode="numeric" autocomplete="off">
              <div class="kvkk-consent">
