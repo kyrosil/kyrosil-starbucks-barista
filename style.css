@@ -1,77 +1,136 @@
 /* Sayfanın temel stilleri */
 body {
     margin: 0;
-    overflow: hidden; /* Kaydırma çubuklarını gizle */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Sayfa yüksekliği kadar */
-    background-color: #f0f0f0; /* Arka plan rengi (Canvas dışı) */
-    font-family: Arial, sans-serif; /* Genel yazı tipi */
+    height: 100vh;
+    background-color: #f0f0f0; /* Veya bir arkaplan resmi */
+    font-family: Arial, sans-serif;
 }
 
-/* Canvas stil ayarları */
-canvas {
-    border: 1px solid black; /* Sadece görmek için geçici kenarlık */
-    display: block; /* Ekstra boşlukları engelle */
-}
-
-/* YENİ: Mesaj Gösterme Katmanı Stilleri */
-.overlay {
-    position: fixed; /* Sayfaya göre sabit */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Yarı saydam siyah arka plan */
-    display: flex;
-    justify-content: center;
+/* YENİ: Giriş Ekranı Stilleri */
+#startScreen {
+    display: flex; /* Başlangıçta görünür */
+    flex-direction: column;
     align-items: center;
-    z-index: 1000; /* Diğer her şeyin üzerinde olsun */
-}
-
-.message-box {
+    justify-content: center;
+    padding: 30px;
     background-color: white;
-    padding: 30px 40px;
-    border-radius: 10px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    max-width: 80%; /* Çok geniş olmasın */
+    max-width: 600px; /* Çok geniş olmasın */
+    width: 90%;
 }
 
-.message-box h2 {
-    margin-top: 0;
-    color: #333;
-}
-
-.message-box #messageBody {
+.logo-container {
     margin-bottom: 20px;
-    line-height: 1.6;
+}
+
+.logo {
+    max-height: 60px; /* Logo boyutunu ayarla */
+    margin: 0 15px;
+}
+
+#gameTitle {
+    color: #006241; /* Starbucks yeşili */
+    margin-bottom: 10px;
+}
+
+#gameSlogan {
+    color: #555;
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 30px; /* Aralarındaki boşluk */
+}
+
+.language-select button {
+    padding: 8px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+.language-select button.active {
+    background-color: #006241;
+    color: white;
+    border-color: #006241;
+}
+
+.region-select label {
+    margin-right: 5px;
     color: #555;
 }
 
-/* Mail linki için stil */
-.message-box #messageBody a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-.message-box #messageBody a:hover {
-    text-decoration: underline;
+.region-select select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.message-box button {
-    padding: 10px 25px;
-    font-size: 16px;
+.rewards-info {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    width: 80%;
+}
+
+.rewards-info h3 {
+    margin-top: 0;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.rewards-info p {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+
+#startButton {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
+    border-radius: 8px;
+    background-color: #00754a; /* Daha koyu yeşil */
     color: white;
     transition: background-color 0.2s ease;
 }
 
-.message-box button:hover {
-    background-color: #0056b3;
+#startButton:hover {
+    background-color: #006241;
 }
+/* Giriş Ekranı Stilleri Sonu */
+
+
+/* Oyun alanı (Başlangıçta Gizli) */
+#gameCanvas {
+    border: 1px solid black;
+    display: none; /* JS ile 'block' yapılacak */
+}
+
+/* Mesaj Gösterme Katmanı Stilleri (Aynı) */
+.overlay { /* ... önceki koddan kopyala ... */ position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:1000; }
+.message-box { /* ... önceki koddan kopyala ... */ background-color:white;padding:30px 40px;border-radius:10px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.3);max-width:80%; }
+.message-box h2 { margin-top:0;color:#333; }
+.message-box #messageBody { margin-bottom:20px;line-height:1.6;color:#555; }
+.message-box #messageBody a { color:#007bff;text-decoration:none;font-weight:bold; }
+.message-box #messageBody a:hover { text-decoration:underline; }
+.message-box button { padding:10px 25px;font-size:16px;cursor:pointer;border:none;border-radius:5px;background-color:#007bff;color:white;transition:background-color 0.2s ease; }
+.message-box button:hover { background-color:#0056b3; }
 /* Mesaj Katmanı Stilleri Sonu */
