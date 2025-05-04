@@ -34,11 +34,14 @@ logoImage.onload = function() {
 bgImage.src = 'original.gif';
 logoImage.src = 'Starbucks_Corporation.png';
 
-// Logo yerleşimi için YENİ tahmini koordinatlar ve boyut (Deneme 3)
-const logoX = 125; // Biraz daha sağa aldık
-const logoY = 95;  // Biraz daha aşağı aldık
-const logoWidth = 60; // Boyut aynı kalsın şimdilik
-const logoHeight = 60; // Boyut aynı kalsın şimdilik
+// Logo boyutu (İstersen değiştirebiliriz)
+const logoWidth = 80;
+const logoHeight = 80;
+
+// Logo yerleşimi: Canvas'ın tam ortası
+const logoX = canvas.width / 2 - logoWidth / 2; // Ortalamak için hesaplama
+const logoY = canvas.height / 2 - logoHeight / 2; // Ortalamak için hesaplama
+
 
 // Ana oyun döngüsü fonksiyonu
 function drawGame() {
@@ -50,13 +53,19 @@ function drawGame() {
         ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     }
 
-    // Logoyu çizmeden ÖNCE: Aslan başını kapatmak için logonun arkasına beyaz bir alan çizelim
+    // Logoyu çizmeden ÖNCE: Logonun arkasına beyaz bir DAİRE çizelim
     if (logoLoaded) {
-        // Beyaz bir dörtgen çiz:
-        ctx.fillStyle = 'white'; // Çizilecek şeklin rengi beyaz
-        ctx.fillRect(logoX, logoY, logoWidth, logoHeight); // Logonun konumuna ve boyutuna göre doldur
+        const circleCenterX = logoX + logoWidth / 2; // Dairenin merkez X'i
+        const circleCenterY = logoY + logoHeight / 2; // Dairenin merkez Y'si
+        const radius = logoWidth / 2; // Yarıçap (logonun yarısı kadar)
 
-        // Şimdi logoyu beyaz alanın üzerine çizelim
+        ctx.fillStyle = 'white'; // Dairenin rengi beyaz
+        ctx.beginPath(); // Yeni bir çizim yolu başlat
+        // Daire çiz: merkezX, merkezY, yarıçap, başlangıç açısı, bitiş açısı
+        ctx.arc(circleCenterX, circleCenterY, radius, 0, Math.PI * 2);
+        ctx.fill(); // Dairenin içini doldur
+
+        // Şimdi logoyu beyaz dairenin üzerine çizelim
         ctx.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
     }
 
