@@ -34,9 +34,9 @@ logoImage.onload = function() {
 bgImage.src = 'original.gif';
 logoImage.src = 'Starbucks_Corporation.png';
 
-// Logo yerleşimi için YENİ tahmini koordinatlar ve boyut (Deneme 1)
-const logoX = 30; // Daha sola aldık
-const logoY = 30; // Daha yukarı aldık
+// Logo yerleşimi için YENİ tahmini koordinatlar ve boyut (Deneme 2)
+const logoX = 110; // Biraz sağa aldık
+const logoY = 80;  // Biraz aşağı aldık
 const logoWidth = 60; // Boyut aynı kalsın şimdilik
 const logoHeight = 60; // Boyut aynı kalsın şimdilik
 
@@ -46,7 +46,6 @@ function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Arka planı çizelim (Şimdilik GIF'i statik resim gibi çiziyoruz)
-    // Not: GIF animasyonu için daha sonra ek kod gerekebilir
     if (bgLoaded) {
         ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     }
@@ -56,14 +55,6 @@ function drawGame() {
         // Beyaz bir dörtgen çiz:
         ctx.fillStyle = 'white'; // Çizilecek şeklin rengi beyaz
         ctx.fillRect(logoX, logoY, logoWidth, logoHeight); // Logonun konumuna ve boyutuna göre doldur
-
-        /* Alternatif: Beyaz Daire İstersen Yukarıdaki fillRect yerine bunları kullan:
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        // Dairenin merkezi (logo merkezinde), yarıçapı (logo genişliğinin yarısı)
-        ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2);
-        ctx.fill();
-        */
 
         // Şimdi logoyu beyaz alanın üzerine çizelim
         ctx.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
