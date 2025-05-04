@@ -4,14 +4,15 @@
 /* --- Genel Sayfa Stilleri --- */
 body {
     margin: 0;
-    overflow: hidden;
+    /* overflow: hidden; <<<--- BU SATIR KALDIRILDI! */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Tam yükseklik */
-    background-color: #f4f4f4; /* Daha açık bir gri */
-    font-family: 'Poppins', Arial, sans-serif; /* Yeni font */
-    color: #333; /* Varsayılan metin rengi */
+    min-height: 100vh; /* Ekran taşarsa kaydırma olsun diye height yerine min-height */
+    background-color: #f4f4f4;
+    font-family: 'Poppins', Arial, sans-serif;
+    color: #333;
+    padding: 10px 0; /* Mobilde üste/alta yapışmasın diye küçük bir boşluk */
 }
 
 /* --- Giriş Ekranı --- */
@@ -19,15 +20,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 30px 40px; /* İç boşluk artırıldı */
+    /* justify-content: center; <<<--- İçerik uzayabileceğinden bunu kaldıralım */
+    padding: 25px 30px; /* Biraz daha boşluk */
     background-color: white;
-    border-radius: 20px; /* Daha yuvarlak köşeler */
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12); /* Daha belirgin gölge */
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
     text-align: center;
-    max-width: 550px; /* Biraz daraltıldı */
+    max-width: 550px;
     width: 90%;
-    border: 1px solid #eee; /* İnce bir kenarlık */
+    margin: 20px 0; /* Sayfa kayarsa diye üst/alt boşluk */
+    border: 1px solid #eee;
 }
 
 /* Logolar */
