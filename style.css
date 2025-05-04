@@ -1,18 +1,25 @@
 /* --- Google Font Import --- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lora:wght@400;700&display=swap');
 
 /* --- Genel Sayfa Stilleri --- */
 body {
     margin: 0;
-    /* overflow: hidden; <<<--- BU SATIR KALDIRILDI! */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Ekran taşarsa kaydırma olsun diye height yerine min-height */
-    background-color: #f4f4f4;
-    font-family: 'Poppins', Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f4f4f4 0%, #e8ecef 100%), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="10" fill="%23006241" fill-opacity="0.05"/%3E%3C/svg%3E');
+    background-size: cover, 100px;
+    font-family: 'Montserrat', 'Poppins', Arial, sans-serif;
     color: #333;
-    padding: 10px 0; /* Mobilde üste/alta yapışmasın diye küçük bir boşluk */
+    padding: 15px 0;
+    animation: fadeIn 1s ease;
+}
+
+/* Animasyon: Fade-In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* --- Giriş Ekranı --- */
@@ -20,41 +27,73 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; <<<--- İçerik uzayabileceğinden bunu kaldıralım */
-    padding: 25px 30px; /* Biraz daha boşluk */
-    background-color: white;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.98);
     border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(5px);
     text-align: center;
-    max-width: 550px;
+    max-width: 600px;
     width: 90%;
-    margin: 20px 0; /* Sayfa kayarsa diye üst/alt boşluk */
-    border: 1px solid #eee;
+    margin: 20px 0;
+    border: 2px solid rgba(0, 98, 65, 0.2);
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease;
+}
+#startScreen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Cpath d="M25 10c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 4-9 9-9zm0 2c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7z" fill="%23006241" fill-opacity="0.05"/%3E%3C/svg%3E');
+    opacity: 0.1;
+    z-index: -1;
+}
+#startScreen:hover {
+    transform: scale(1.01);
+    transition: transform 0.3s ease;
+}
+
+/* Animasyon: Slide-Up */
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 /* Logolar */
 .logo-container {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    position: relative;
 }
 .logo {
-    max-height: 55px; /* Biraz küçültüldü */
+    max-height: 60px;
     margin: 0 15px;
-    vertical-align: middle; /* Dikey hizalama */
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+.logo:hover {
+    transform: scale(1.1);
 }
 
 /* Başlık ve Slogan */
 #gameTitle {
-    color: #006241; /* Starbucks yeşili */
-    margin-bottom: 10px;
-    font-size: 2em; /* Biraz büyütüldü */
+    color: #006241;
+    margin-bottom: 12px;
+    font-size: 2.2em;
     font-weight: 700;
+    font-family: 'Lora', serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 #gameSlogan {
-    color: #666; /* Biraz daha koyu gri */
-    margin-bottom: 25px;
-    font-size: 1em;
+    color: #555;
+    margin-bottom: 30px;
+    font-size: 1.1em;
     max-width: 90%;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-style: italic;
 }
 
 /* Ayarlar (Dil ve Bölge) */
@@ -62,172 +101,400 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 25px;
-    gap: 20px; /* Biraz azaltıldı */
+    margin-bottom: 30px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 .language-select button {
-    padding: 8px 16px;
-    margin: 0 4px;
+    padding: 10px 20px;
+    margin: 0 5px;
     cursor: pointer;
-    border: 1px solid #ddd;
+    border: none;
     background-color: #f9f9f9;
-    border-radius: 6px;
-    font-size: 0.9em;
+    border-radius: 8px;
+    font-size: 0.95em;
     font-weight: 600;
-    transition: all 0.2s ease;
+    color: #333;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.language-select button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(0, 98, 65, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+.language-select button:hover::after {
+    width: 200px;
+    height: 200px;
 }
 .language-select button:hover {
-    background-color: #eee;
-    border-color: #ccc;
+    background-color: #006241;
+    color: white;
 }
 .language-select button.active {
     background-color: #006241;
     color: white;
-    border-color: #005034; /* Biraz daha koyu */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 98, 65, 0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 98, 65, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 98, 65, 0); }
 }
 .region-select label {
-    margin-right: 8px;
-    color: #555;
-    font-size: 0.95em;
+    margin-right: 10px;
+    color: #444;
+    font-size: 1em;
     font-weight: 600;
 }
 .region-select select {
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 10px 15px;
+    border-radius: 8px;
     border: 1px solid #ddd;
-    font-size: 0.9em;
+    font-size: 0.95em;
     background-color: white;
+    transition: border-color 0.3s ease;
+}
+.region-select select:focus {
+    border-color: #006241;
+    outline: none;
 }
 
 /* Ödül Bilgisi Alanı */
 .rewards-info {
-    margin-bottom: 25px;
-    padding: 15px 20px;
-    background-color: #f0f9f4; /* Çok açık yeşilimsi */
-    border-radius: 10px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f0f9f4;
+    border-radius: 12px;
     width: 90%;
-    max-width: 450px;
+    max-width: 480px;
     border: 1px solid #d4e9d9;
+    position: relative;
+}
+.rewards-info::before {
+    content: '★';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5em;
+    color: #006241;
+    opacity: 0.2;
 }
 .rewards-info h3 {
     margin-top: 0;
     color: #006241;
-    margin-bottom: 12px;
-    font-size: 1.1em;
-    font-weight: 600;
-    border-bottom: 1px solid #c1dac9;
-    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 700;
+    border-bottom: 2px solid #c1dac9;
+    padding-bottom: 10px;
+    font-family: 'Lora', serif;
 }
-#rewardList { list-style: none; padding: 0; margin: 0; font-size: 0.9em; color: #333; text-align: left; }
-#rewardList li { margin-bottom: 6px; display: flex; justify-content: space-between; }
-#rewardList strong { color: #005034; font-weight: 600; flex-basis: 70px; /* Sabit genişlik */ text-align: right; margin-right: 10px; }
-#rewardList span { font-weight: 600; color: #111; flex-grow: 1; text-align: left; }
-#rewardList .prize-type { font-size: 0.9em; color: #555; margin-left: 8px; font-weight: 400; white-space: nowrap; }
+#rewardList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95em;
+    color: #333;
+    text-align: left;
+}
+#rewardList li {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#rewardList strong {
+    color: #005034;
+    font-weight: 600;
+    flex-basis: 80px;
+    text-align: right;
+    margin-right: 15px;
+}
+#rewardList span {
+    font-weight: 600;
+    color: #111;
+    flex-grow: 1;
+    text-align: left;
+}
+#rewardList .prize-type {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+    font-weight: 400;
+    white-space: nowrap;
+}
 
 /* GSM Giriş Alanı */
-.gsm-input { margin-bottom: 20px; width: 90%; max-width: 380px; }
-.gsm-input label[for="gsmInput"] { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95em; color: #333; }
-#gsmInput { width: calc(100% - 24px); padding: 11px; border: 1px solid #ccc; border-radius: 6px; font-size: 1em; margin-bottom: 12px; transition: border-color 0.2s ease; }
-#gsmInput:focus { border-color: #006241; outline: none; }
-.kvkk-consent { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-#kvkkCheck { margin-right: 8px; width: 16px; height: 16px; cursor: pointer; accent-color: #006241; /* Checkbox rengi */ }
-.kvkk-consent label { font-size: 0.85em; color: #555; cursor: pointer; line-height: 1.4; }
-.error-message { color: #dc3545; /* Kırmızı */ font-size: 0.85em; margin-top: 6px; min-height: 1em; font-weight: 600; }
+.gsm-input {
+    margin-bottom: 25px;
+    width: 90%;
+    max-width: 400px;
+}
+.gsm-input label[for="gsmInput"] {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1em;
+    color: #333;
+}
+#gsmInput {
+    width: calc(100% - 24px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#gsmInput:focus {
+    border-color: #006241;
+    box-shadow: 0 0 8px rgba(0, 98, 65, 0.2);
+    outline: none;
+}
+.kvkk-consent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+#kvkkCheck {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #006241;
+}
+.kvkk-consent label {
+    font-size: 0.9em;
+    color: #555;
+    cursor: pointer;
+    line-height: 1.5;
+}
+.error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 8px;
+    min-height: 1em;
+    font-weight: 600;
+    animation: shake 0.3s ease;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
 
 /* Başlat Butonu */
-#startButton { padding: 14px 45px; font-size: 1.2em; font-weight: 700; cursor: pointer; border: none; border-radius: 8px; background-color: #00754a; color: white; transition: background-color 0.2s ease, transform 0.1s ease; }
-#startButton:hover:not(:disabled) { background-color: #006241; transform: translateY(-1px); }
-#startButton:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
+#startButton {
+    padding: 15px 50px;
+    font-size: 1.3em;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #00754a;
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+#startButton::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+#startButton:hover:not(:disabled)::after {
+    width: 300px;
+    height: 300px;
+}
+#startButton:hover:not(:disabled) {
+    background-color: #006241;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 98, 65, 0.3);
+}
+#startButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
 
 /* Oyun Alanı (Başlangıçta Gizli) */
-#gameCanvas { border: 1px solid #ccc; /* Daha yumuşak kenarlık */ display: none; max-width: 100%; /* Mobil için */ height: auto; /* Mobil için */ }
+#gameCanvas {
+    border: 2px solid #006241;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: none;
+    max-width: 100%;
+    height: auto;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Cpath d="M25 10c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 4-9 9-9zm0 2c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7z" fill="%23006241" fill-opacity="0.03"/%3E%3C/svg%3E');
+    background-size: 50px;
+}
 
 /* Mesaj Kutusu (Overlay) */
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:1000; padding: 15px;}
-.message-box{background-color:white;padding:30px 40px;border-radius:15px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.3);max-width:90%; width: 450px; /* Sabit genişlik deneyelim */}
-.message-box h2{margin-top:0;color:#333; font-weight: 700;}
-.message-box #messageBody{margin-bottom:25px;line-height:1.6;color:#555;font-size: 1.05em;}
-.message-box #messageBody a{color:#006241;text-decoration:underline;font-weight:600;}
-.message-box #messageBody a:hover{color:#004d34;}
-.message-box button{padding:12px 30px;font-size:1em; font-weight: 600; cursor:pointer;border:none;border-radius:8px;background-color:#00754a;color:white;transition:background-color 0.2s ease;}
-.message-box button:hover{background-color:#006241;}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 15px;
+    animation: fadeIn 0.5s ease;
+}
+.message-box {
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    width: 480px;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease;
+}
+.message-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Cpath d="M25 10c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 4-9 9-9zm0 2c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7z" fill="%23006241" fill-opacity="0.05"/%3E%3C/svg%3E');
+    opacity: 0.1;
+    z-index: -1;
+}
+.message-box h2 {
+    margin-top: 0;
+    color: #006241;
+    font-weight: 700;
+    font-family: 'Lora', serif;
+}
+.message-box #messageBody {
+    margin-bottom: 30px;
+    line-height: 1.7;
+    color: #444;
+    font-size: 1.1em;
+}
+.message-box #messageBody a {
+    color: #006241;
+    text-decoration: underline;
+    font-weight: 600;
+}
+.message-box #messageBody a:hover {
+    color: #004d34;
+}
+.message-box button {
+    padding: 12px 35px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #00754a;
+    color: white;
+    transition: all 0.3s ease;
+}
+.message-box button:hover {
+    background-color: #006241;
+    transform: rotate(2deg);
+}
 
 /* --- Mobil Uyumluluk (Responsive Tasarım) --- */
 @media (max-width: 600px) {
+    body {
+        padding: 10px 0;
+    }
     #startScreen {
-        padding: 20px 15px; /* Daha az yan boşluk */
+        padding: 20px;
         width: 95%;
         max-width: 95%;
+        border-radius: 15px;
     }
     .logo {
-        max-height: 45px; /* Logolar küçülsün */
+        max-height: 50px;
     }
     #gameTitle {
-        font-size: 1.6em; /* Başlık küçülsün */
+        font-size: 1.8em;
     }
     #gameSlogan {
-        font-size: 0.85em; /* Slogan küçülsün */
+        font-size: 0.9em;
         margin-bottom: 20px;
     }
     .settings {
-        gap: 15px; /* Ayar araları azalsın */
+        gap: 10px;
         margin-bottom: 20px;
     }
     .language-select button {
-        padding: 5px 10px;
-        font-size: 0.8em;
+        padding: 8px 15px;
+        font-size: 0.85em;
     }
     .region-select select {
-        padding: 5px 8px;
-        font-size: 0.8em;
+        padding: 8px 10px;
+        font-size: 0.85em;
     }
     .rewards-info {
         width: 95%;
-        padding: 10px;
+        padding: 15px;
         margin-bottom: 20px;
     }
     .rewards-info h3 {
-        font-size: 1em;
-        margin-bottom: 8px;
+        font-size: 1.1em;
+        margin-bottom: 10px;
     }
     #rewardList {
-        font-size: 0.8em;
+        font-size: 0.85em;
     }
-     #rewardList strong {
-        width: 60px; /* Seviye kısmı daralsın */
+    #rewardList strong {
+        flex-basis: 70px;
     }
     .gsm-input {
-         width: 95%;
-         margin-bottom: 15px;
+        width: 95%;
+        margin-bottom: 15px;
     }
     #gsmInput {
-        padding: 9px;
+        padding: 10px;
         font-size: 0.95em;
     }
     .kvkk-consent label {
-        font-size: 0.75em; /* KVKK yazısı küçülsün */
+        font-size: 0.8em;
     }
     #startButton {
-        padding: 12px 30px;
+        padding: 12px 35px;
+        font-size: 1.1em;
+    }
+    .message-box {
+        width: 85%;
+        padding: 25px;
+    }
+    .message-box h2 {
+        font-size: 1.4em;
+    }
+    .message-box #messageBody {
         font-size: 1em;
     }
-     .message-box {
-        width: 85%;
-        padding: 25px 20px;
-    }
-     .message-box h2 {
-        font-size: 1.3em;
-    }
-    .message-box #messageBody{
-        font-size: 0.95em;
-    }
     .message-box button {
-        padding: 10px 25px;
-        font-size: 0.9em;
+        padding: 10px 30px;
+        font-size: 1em;
     }
-
-    /* Canvas mobil için (Örnek - Boyutları JS ayarlar ama max-width önemli) */
-    /* #gameCanvas { max-width: 100%; height: auto; } */
-    /* Canvas boyutunu JS içinden ayarlamak daha iyi olabilir */
 }
